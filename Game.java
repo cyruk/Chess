@@ -1,4 +1,3 @@
-
 package samp;
 
 import java.io.IOException;
@@ -59,6 +58,28 @@ public class Game  {
                 br.board[row2][col2] = br.board[row1][col1];
                 br.board[row1][col1] = new Empty("##");
                 br.board[row2][col2].moved =true;
+            }
+        }
+        else if(br.board[row1][col1].getClass().isInstance(new Bishop())){
+            if(moveDetails.equals("FreeMove")){
+                tmp[0] = br.board[row2][col2];
+                br.board[row2][col2] = br.board[row1][col1];
+                br.board[row1][col1] = tmp[0];
+            }
+            else if(moveDetails.equals("Kill")){
+                br.board[row2][col2] = br.board[row1][col1];
+                br.board[row1][col1] = new Empty("##");
+            }
+        }
+        else if(br.board[row1][col1].getClass().isInstance(new Knight())){
+            if(moveDetails.equals("FreeMove")){
+                tmp[0] = br.board[row2][col2];
+                br.board[row2][col2] = br.board[row1][col1];
+                br.board[row1][col1] = tmp[0];
+            }
+            else if(moveDetails.equals("Kill")){
+                br.board[row2][col2] = br.board[row1][col1];
+                br.board[row1][col1] = new Empty("##");
             }
         }
         return br;
@@ -136,3 +157,4 @@ public class Game  {
         return br;
     }
 }
+
