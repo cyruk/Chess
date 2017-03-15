@@ -18,65 +18,76 @@ public class Rook extends Piece {
         ePos = false;
         moved = false;
     }
+    public Rook(){}
 
     public String isValid(int row1, int col1, int row2, int col2, Board br) throws IOException {
         String dir = direction(row1,col1,row2,col2);
-
-        if(dir.equals('i')){
+        String cl = br.board[row1][col1].getColor();
+        System.out.println(dir);
+        int i;
+        if(dir.equals("invalid")){
+            System.out.println("Diagonal move");
             return "No";
         }
-        else if(dir.equals('n')){
-            for(int i = row1;i>=row2;i--){
-                if(!(br.board[i][col2].getClass().isInstance(new Empty())) && (br.board[i][col2].color==color)){
+        //System.out.println(dir);
+        else if(dir.equals("nor")){
+            for(i = row1-1;i>row2;i--){
+                if(!(br.board[i][col2].getClass().isInstance(new Empty()))){
                     return "No";
                 }
             }
         }
-        else if(dir.equals('s')){
-            for(int i = row1;i<=row2;i++){
-                if(!(br.board[i][col2].getClass().isInstance(new Empty()))&&br.board[i][col2].color==color){
+        else if(dir.equals("sou")){
+            for(i = row1+1;i<row2;i++){
+                if(!(br.board[i][col2].getClass().isInstance(new Empty()))){
                     return "No";
                 }
             }
         }
-        else if(dir.equals('e')){
-            for(int i = col1;i<=col2;i++){
-                if(!(br.board[row2][i].getClass().isInstance(new Empty()))&&br.board[i][col2].color==color){
+        else if(dir.equals("ea")){
+            for(i = col1+1;i<col2;i++){
+                if(!(br.board[row2][i].getClass().isInstance(new Empty()))){
                     return "No";
                 }
             }
         }
-        else if(dir.equals('w')){
-            for(int i = col1;i>=col2;i--){
-                if(!(br.board[row2][i].getClass().isInstance(new Empty()))&&br.board[i][col2].color==color){
+        else if(dir.equals("we")){
+            for(i = col1-1;i>col2;i--){
+                if(!(br.board[row2][i].getClass().isInstance(new Empty()))){
                     return "No";
                 }
             }
         }
-        return "Yes";
+        if((br.board[row2][col2].getClass().isInstance(new Empty()))) {
+            return "FreeMove";
+        }
+        else if(br.board[row2][col2].getColor().equals(cl)){
+            return "No";
+        }
+        return "Kill";
     }
 
     public String direction(int row1,int col1, int row2, int col2){
         if(col1-col2 !=0 && row1-row2!=0){
-            return "i";
+            return "invalid";
         }
         if(col1-col2!=0){
             if(col1-col2 <0){
-                return "e";
+                return "ea";
             }
             else if(col1-col2>0){
-                return "w";
+                return "we";
             }
         }
         else if(row1-row2 != 0){
-            if(row1-row2 <0){
-                return "n";
+            if(row1-row2 >0){
+                return "nor";
             }
-            else if(row1-row2>0){
-                return "s";
+            else if(row1-row2<0){
+                return "sou";
             }
         }
-        return "";
+        return "invalid";
     }
     public String getColor(){
         return color;
