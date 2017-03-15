@@ -1,3 +1,4 @@
+
 package samp;
 
 import java.io.IOException;
@@ -45,6 +46,19 @@ public class Game  {
             else if (moveDetails.equals("KP") || moveDetails.equals("Pro")) {
                 br.board[row2][col2] = new Queen("White", "wQ");
                 br.board[row1][col1] = new Empty("##");
+            }
+        }
+        else if(br.board[row1][col1].getClass().isInstance(new Rook())) {
+            if(moveDetails.equals("FreeMove")){
+                tmp[0] = br.board[row2][col2];
+                br.board[row2][col2] = br.board[row1][col1];
+                br.board[row1][col1] = tmp[0];
+                br.board[row2][col2].moved =true;
+            }
+            else if(moveDetails.equals("Kill")){
+                br.board[row2][col2] = br.board[row1][col1];
+                br.board[row1][col1] = new Empty("##");
+                br.board[row2][col2].moved =true;
             }
         }
         return br;
