@@ -9,11 +9,13 @@ public class Pawn extends Piece {
     public String color;
     public boolean ePos;
     public String name;
+    public int id;
 
-    public Pawn(String color, String name){
+    public Pawn(String color, String name, int id){
         this.color = color;
         this.name = name;
         ePos = false;
+        this.id = id;
     }
     public Pawn(){
 
@@ -21,42 +23,33 @@ public class Pawn extends Piece {
 
     //checks if player move for pawn is valid, if not then returns false, otherwise returns true
     public String isValid(int row1, int col1, int row2, int col2, Board br)throws IOException{
-        //System.out.println("Got into isValid for pawn");
-        //System.out.println("Coordinates " + row1+ "," + col1 + "-->" + row2 + "," + col2);
         if(br.board[row1][col1].getColor().equals("White")){
-            System.out.println("Got into is White pawn");
             //going backwards?
             if(row2 >=row1){
-                System.out.println("Going Backwards");
                 return "No";
             }
             //moving more than one spot to the left or right?
             else if(col1-col2>1||col2-col1>1){
-                System.out.println("More than one spots to the left or right");
                 return "No";
             }
             //made atleast one move and moving two spots forward?
             else if(row1<6&& row1-row2>1){
-                System.out.println("Already moved and moving more than one spot forward");
                 return "No";
             }
             //has not moved and moving more than two spots forward in one turn?
             else if(row1==6&& row1-row2>2 ){
-                System.out.println("Has not moved and moving more than two spots");
                 return "No";
             }
             //moving two spots as first move, and not moving straight
             else if(row1==6 && (row1-row2>=2 && col1 !=col2)){
-                System.out.println("Moving two spots on first move and moving diagonal");
                 return "No";
             }
             String cl = br.board[row2][col2].getColor();
-            System.out.println(br.board[row2][col2].getClass());
+            
             //desired spot not empty
             if(!(br.board[row2][col2].getClass().isInstance(new Empty()))){
                 //if moving forward and friendly piece in the way
                 if((cl.equals("White") && col2 == col1)||(cl.equals("Black") && col2 == col1)) {
-                    System.out.println("Black piece or white piece in front");
                     return "No";
                 }
                 else if(cl.equals("White") && col2 != col1) {
@@ -77,10 +70,9 @@ public class Pawn extends Piece {
                     }
                     //moving two spots but piece in the way
                     else if(row1==6 && row1-row2==2 && !br.board[row2+1][col2].getClass().isInstance(new Empty())){
-                        System.out.println("Moving two spots but piece in the way");
                         return "No";
                     }
-                    return "Yes";
+                    return "FreeMove";
                 }
                 else if(row1 ==3&& br.board[row2+1][col2].ePos==true){
                     return "Epos";
@@ -114,7 +106,6 @@ public class Pawn extends Piece {
             //desired spot not empty
             if(!(br.board[row2][col2].getClass().isInstance(new Empty()))){
                 if((cl.equals("White") && col2 == col1)||(cl.equals("Black") && col2 == col1)) {
-                    System.out.println("Black piece or white piece in front");
                     return "No";
                 }
                 else if(cl.equals("Black") && col2 != col1) {
@@ -137,7 +128,7 @@ public class Pawn extends Piece {
                     else if(row1 ==1 && row2-row1 ==2&& !br.board[row2-1][col2].getClass().isInstance(new Empty())){
                         return "No";
                     }
-                    return "Yes";
+                    return "FreeMove";
                 }
                 else if(row1 ==4&& br.board[row2-1][col2].ePos==true){
                     return "Epos";
@@ -145,8 +136,7 @@ public class Pawn extends Piece {
                 return "No";
             }
         }
-
-        return "Yes";
+        return "FreeMove";
     }
 
     public String getColor(){
@@ -155,5 +145,8 @@ public class Pawn extends Piece {
 
     public String getName(){
         return name;
+    }
+    public int getId(){
+        return id;
     }
 }
