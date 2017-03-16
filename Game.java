@@ -1,5 +1,4 @@
 
-
 package samp;
 
 import java.io.IOException;
@@ -70,8 +69,7 @@ public class Game {
                 br = freeMove(br, row1, col1, row2, col2, tmp, color);
             }
             else if (moveDetails.equals("Kill")) {
-                br.board[row2][col2] = br.board[row1][col1];
-                br.board[row1][col1] = new Empty("##");
+            	 br = Kill(br, row1,col1,row2,col2,tmp,color);
             }
         }
         else if (br.board[row1][col1].getClass().isInstance(new Knight())) {
@@ -79,8 +77,7 @@ public class Game {
                 br = freeMove(br, row1, col1, row2, col2, tmp, color);
             }
             else if (moveDetails.equals("Kill")) {
-                br.board[row2][col2] = br.board[row1][col1];
-                br.board[row1][col1] = new Empty("##");
+            	br = Kill(br, row1,col1,row2,col2,tmp,color);
             }
         }
         else if (br.board[row1][col1].getClass().isInstance(new Queen())) {
@@ -88,8 +85,7 @@ public class Game {
                 br = freeMove(br, row1, col1, row2, col2, tmp, color);
             }
             else if (moveDetails.equals("Kill")) {
-                br.board[row2][col2] = br.board[row1][col1];
-                br.board[row1][col1] = new Empty("##");
+            	br = Kill(br, row1,col1,row2,col2,tmp,color);
             }
         }
         else if (br.board[row1][col1].getClass().isInstance(new King())) {
@@ -153,9 +149,40 @@ public class Game {
     	return "notInFriendlyCheck";
     }
     
-    public boolean enemyCheck(Board br, int row1, int col1, int row2, int col2) throws IOException {
+    public String enemyCheck(Board br, String cdt, boolean whiteTurn) throws IOException {
+    	Board copy = copyBoard(br);
+    	int cord[] = new int[4];
+    	int row2,col2;
+    	cord = convert(cdt);
+    	row2 = cord[2];
+    	col2 = cord[3];
+    	String testCdt = "";
+    	String color = copy.board[row2][col2].getColor();
+    	boolean result;
     	
-        return true;
+        if(color.equals("White")){
+        	for(int i = 0;i <copy.White.length;i++){
+        		testCdt = convertBack(copy.White[i]) + " " +convertBack(copy.Black[15]);
+        		if( convertBack(copy.White[i]).isEmpty() ||convertBack(copy.Black[15]).isEmpty()){
+        			continue;
+        		}
+        		else if(move(copy,testCdt,true)==true){
+        			return "enemyCheck";
+        		}
+        	}	
+        }
+        else if(color.equals("Black")){
+        	for(int i = 0;i <copy.Black.length;i++){
+        		testCdt = convertBack(copy.Black[i]) + " " +  convertBack(copy.White[15]);
+        		if( convertBack(copy.Black[i]).isEmpty() ||convertBack(copy.White[15]).isEmpty()){
+        			continue;
+        		}
+        		else if(move(copy,testCdt,false)==true){
+        			return "enemyCheck";
+        		}
+        	}	
+        }
+    	return "enemyNotInCheck";
     }
 
     public Board changePosition(Board br, String color, int id, int row2, int col2) {
@@ -330,7 +357,7 @@ public class Game {
     		return "";
     	}
 		String finCdt = "";
-		int[] rowArray = {8,7,6,5,4,2,3,1};
+		int[] rowArray = {8,7,6,5,4,3,2,1};
 		int row = Character.getNumericValue(cdt.charAt(0));
     	int corNum = rowArray[row];
     	int col = Character.getNumericValue(cdt.charAt(1));
