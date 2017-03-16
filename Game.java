@@ -1,4 +1,5 @@
 
+
 package samp;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ public class Game {
     public Game() {
     }
 
-    public boolean move(Board br, String cr) throws IOException {
+    public boolean move(Board br, String cr, boolean whiteTurn) throws IOException, NullPointerException {
         int[] cor;
         int row1, col1, row2, col2;
         cor = convert(cr);
@@ -20,8 +21,18 @@ public class Game {
         col1 = cor[1];
         row2 = cor[2];
         col2 = cor[3];
-        System.out.println(row1 + "," + col1 + "-->" + row2 + "," + col2);
+        //System.out.println(row1 + "," + col1 + "-->" + row2 + "," + col2);
+        //System.out.println(br.board[row1][col1].getClass());
+        if(row1==row2 && col1 ==col2){
+        	return false;
+        }
+        else if (br.board[row1][col1].getClass().isInstance(new Empty())){
+        	return false;
+        }
         String color = br.board[row1][col1].getColor();
+        if ((whiteTurn == true && color.equals("Black"))||(whiteTurn == false && color.equals("White"))){
+        	return false;
+        }
         String moveDetails = br.board[row1][col1].isValid(row1, col1, row2, col2, br);
         if (moveDetails.equals("No")){
         	return false;
@@ -29,6 +40,10 @@ public class Game {
         if (br.board[row1][col1].getClass().isInstance(new Pawn())) {
             if (moveDetails.equals("FreeMove")) {
                 br = freeMove(br, row1, col1, row2, col2, tmp, color);
+            }
+            else if(moveDetails.equals("setEpos")){
+            	br = freeMove(br, row1, col1, row2, col2, tmp, color);
+            	br.board[row2][col2].ePos = true;
             }
             else if (moveDetails.equals("Epos")){
                 Epos(br,row1,col1,row2,col2,color,tmp);
@@ -91,14 +106,51 @@ public class Game {
             }
         }
         return true;
-    } 
+    }
+    public Board simulate(Board copy, String cdt, boolean turn){
+    	//copy = move(copy)
+    	return copy;
+    }
 
-    public boolean friendlyCheck(Board br, int row1, int col1, int row2, int col2) throws IOException {
-    	String color = br.board[row1][col1].getColor();
-    	if(color.equals("White")){
-    		
-    	}
-        return true;
+    public String friendlyCheck(Board br, String cdt, boolean whiteTurn) throws IOException {
+    	Board copy = copyBoard(br);
+    	int cord[] = new int[4];
+    	int row1,col1;
+    	cord = convert(cdt);
+    	row1 = cord[0];
+    	col1 = cord[1];
+    	String testCdt = "";
+    	String color = copy.board[row1][col1].getColor();
+    	boolean result;
+    	result = move(copy, cdt, whiteTurn);
+        if (result == false){
+        	return "invalid";
+        }
+        else{
+        	if(color.equals("White")){
+        		for(int i = 0;i <copy.Black.length;i++){
+        			testCdt = convertBack(copy.Black[i]) + " " +convertBack(copy.White[15]);
+        			if( convertBack(copy.Black[i]).isEmpty() ||convertBack(copy.White[15]).isEmpty()){
+        				continue;
+        			}
+        			else if(move(copy,testCdt,false)==true){
+        				return "inFriendlyCheck";
+        			}
+        		}	
+        	}
+        	else if(color.equals("Black")){
+        		for(int i = 0;i <copy.White.length;i++){
+        			testCdt = convertBack(copy.White[i]) + " " +  convertBack(copy.Black[15]);
+        			if( convertBack(copy.White[i]).isEmpty() ||convertBack(copy.Black[15]).isEmpty()){
+        				continue;
+        			}
+        			else if(move(copy,testCdt,true)==true){
+        				return "inFriendlyCheck";
+        			}
+        		}	
+        	}
+        }
+    	return "notInFriendlyCheck";
     }
     
     public boolean enemyCheck(Board br, int row1, int col1, int row2, int col2) throws IOException {
@@ -166,7 +218,7 @@ public class Game {
                     br = changePosition(br, color, pawnID, row2, col2);
                 }
                 else if (promo == 'Q'){
-                    br.board[row2][col2] = new Queen(color, colorPiece + "R", pawnID);
+                    br.board[row2][col2] = new Queen(color, colorPiece + "Q", pawnID);
                     br.board[row1][col1] = new Empty("##");
                     br = changePosition(br, color, pawnID, row2, col2);
                 }
@@ -196,7 +248,7 @@ public class Game {
                     br = changePosition(br, color, pawnID, row2, col2);
                 }
                 else if (promo == 'Q'){
-                    br.board[row2][col2] = new Queen(color, colorPiece + "R", pawnID);
+                    br.board[row2][col2] = new Queen(color, colorPiece + "Q", pawnID);
                     br.board[row1][col1] = new Empty("##");
                     br = changePosition(br, color, pawnID, row2, col2);
                 }
@@ -272,9 +324,38 @@ public class Game {
         br.board[row2][col2].moved = true;
         return br;
     }
+    
+    public String convertBack(String cdt){
+    	if(cdt.equals("")){
+    		return "";
+    	}
+		String finCdt = "";
+		int[] rowArray = {8,7,6,5,4,2,3,1};
+		int row = Character.getNumericValue(cdt.charAt(0));
+    	int corNum = rowArray[row];
+    	int col = Character.getNumericValue(cdt.charAt(1));
+		int i = col+1;
+		finCdt = "" + (char)(i+'a'-1) + corNum;
+		return finCdt;
+    }
+    
+    public Board copyBoard(Board br){
+    	Board copy = new Board();
+    	int i,j;
+    	for(i =0;i<8;i++){
+    		for(j = 0;j<8;j++){
+    			copy.board[i][j] = br.board[i][j];
+    		}
+    	}
+    	
+    	for(i = 0;i<16;i++){
+    		copy.Black[i] = br.Black[i];
+    		copy.White[i] = br.White[i];
+    	}
+    	return copy;
+    }
 
     public int[] convert(String cdt) {
-        // br = game.move(br,"a7 b5");
         int[] cor = new int[4];
         int[] rows = { 7, 6, 5, 4, 3, 2, 1, 0 };
         int row = Character.getNumericValue(cdt.charAt(1));
