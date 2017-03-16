@@ -46,6 +46,9 @@ public class Chess {
 				}
 				else {
 						moveValue = game.move(br, input, whiteTurn);
+						if(game.enemyCheck(br, input, whiteTurn).equals("enemyCheck")){
+							System.out.println("Check");
+						}
 						resetEpos(br,whiteTurn);
 					}
 					whiteTurn = changeTurn(whiteTurn);
