@@ -1,6 +1,7 @@
 package samp;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * Created by Shah on 3/9/2017.
@@ -11,35 +12,47 @@ public class Chess {
 
         Board br = new Board();
         Game game = new Game();
-        //br.toString();
-        br = game.swap(br,1,0,4,0);
-        //System.out.println();
-        //br.toString();
-        br = game.swap(br,6,1,4,1);
-        System.out.println();
+        Scanner sc = new Scanner(System.in);
+        String input = "";
+        boolean draw = false;
+        boolean whiteTurn = true;
+        boolean moveValue;
         br.toString();
-        br.board[4][1].ePos=true;
-        br = game.move(br,"a4 b3");
-        System.out.println();
-        br.toString();
-        br = game.move(br,"b3 b2");
-        System.out.println();
-        br.toString();
-        br = game.move(br,"b2 a1");
-        System.out.println();
-        br.toString();
-//        br = game.move(br,"g6 g7");
-//      System.out.println();
-        //br.toString();
-        /*br = game.move(br,"b6 b7");
-        System.out.println();
-        br.toString();
-        br = game.move(br,"b7 b8");
-        System.out.println();
-        br.toString();
-
-        br = game.move(br,"b7 c8");
-        System.out.println();
-        br.toString();*/
+        while (true){
+            if(whiteTurn == true) {
+                //System.out.print("White's move: ");
+            	System.out.printf( "White's move:" );
+            }
+            else{
+                //System.out.print("Blacks's move: ");
+            	System.out.printf( "Black's move:" );
+            }
+            input = sc.nextLine();
+            if(input.toLowerCase().equals("resign")){
+                break;
+            }
+            else if(input.length() == 11){
+                if(input.substring(6,11).equals("draw?")){
+                    draw = true;
+                }
+            }
+            else{
+            	moveValue = game.move(br,input);
+            	if(moveValue == false){
+            		System.out.println("Invalid move try again");
+            	}
+            	
+            	else{
+            		whiteTurn = changeTurn(whiteTurn);
+            		br.toString();
+            	}
+           }
+       }
+    }
+    public static boolean changeTurn(boolean whiteTurn){
+        if(whiteTurn==true){
+            return false;
+        }
+        return true;
     }
 }
