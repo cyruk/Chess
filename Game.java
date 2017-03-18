@@ -123,7 +123,7 @@ public class Game {
     	int killerIndex = 0;
     	String blockCoordinate = "";
     	//if piece that moves is white, seeing if black king is in check
-        if(color.equals("White")){
+        if(turn==true){
         	//getting coordinates of of the black king
         	kRow = Character.getNumericValue(br.Black[15].charAt(0));
         	kCol = Character.getNumericValue(br.Black[15].charAt(1));
@@ -139,7 +139,7 @@ public class Game {
         			continue;
         		}
         		//if a piece has the king in its line of sight
-        		else if(enemyCheck(copy,testCdt,false).equals("enemyCheck")){
+        		else if(pieceEnemyCheck(copy,testCdt,true,i)==true){
         			//save that piece's info
         			pieceKInCheck[0] = convertBack(copy.White[i]);
         			killerIndex = i;
@@ -152,7 +152,7 @@ public class Game {
         	}	
         }
         //Same as above if statement
-        else if(color.equals("Black")){
+        else if(turn ==false){
         	kRow = Character.getNumericValue(br.White[15].charAt(0));
         	kCol = Character.getNumericValue(br.White[15].charAt(1));
         	validCoordinates = kObject.possibleMoves(kRow, kCol);
@@ -161,7 +161,7 @@ public class Game {
         		if( convertBack(copy.Black[i]).isEmpty()){
         			continue;
         		}
-        		else if(enemyCheck(copy,testCdt,true).equals("enemyCheck")){
+        		else if(pieceEnemyCheck(copy,testCdt,false,i)==true){
         			pieceKInCheck[0] = convertBack(copy.Black[i]);
         			killerIndex = i;
         			checkCounter++;
@@ -174,7 +174,7 @@ public class Game {
         //get a fresh board based on the original game board passed in by chess class
         copy = copyBoard(br);
         //Scenario #1--> more than one piece has king in check, king has to move
-        if(checkCounter >1 && color.equals("White")){
+        if(checkCounter >1 && turn==true){
         	for(int i = 0;i<8;i++){
         		//if the king can move to this spot on the board
         		if(!validCoordinates[i].isEmpty()){
@@ -193,13 +193,13 @@ public class Game {
         	}
         }
         //more than one black piece has the white king in check
-        else if(checkCounter >1 && color.equals("Black")){
+        else if(checkCounter >1 && turn==false){
         	for(int i = 0;i<8;i++){
         		//if the king can move to this spot on the board
         		if(!validCoordinates[i].isEmpty()){
         			kCoordinate = convertBack(copy.White[15]) + " " + convertBack(validCoordinates[i]);
         			//if theres a piece in the way or the king will be in check if it moves, increment
-        			if(friendlyCheck(copy, kCoordinate,false).equals("notInFriendlyCheck")){
+        			if(friendlyCheck(copy, kCoordinate,true).equals("notInFriendlyCheck")){
         				return false;
         			}
         			else{
@@ -215,7 +215,7 @@ public class Game {
         	}
         }
         //Only one piece has black king in check
-        else if(checkCounter ==1 && color.equals("White")){
+        else if(checkCounter ==1 && turn==true){
         	for(int i = 0;i<8;i++){
         		if(!validCoordinates[i].isEmpty()){
         			kCoordinate = convertBack(copy.Black[15]) + " " + convertBack(validCoordinates[i]);
@@ -254,8 +254,8 @@ public class Game {
         	}
         }
         
-        //Only one piece has black king in check
-        else if(checkCounter ==1 && color.equals("Black")){
+        //Only one piece has white king in check
+        else if(checkCounter ==1 && turn==false){
         	for(int i = 0;i<8;i++){
         		if(!validCoordinates[i].isEmpty()){
         			kCoordinate = convertBack(copy.White[15]) + " " + convertBack(validCoordinates[i]);
@@ -296,6 +296,40 @@ public class Game {
     
         
     	return false;
+    }
+    
+    public boolean pieceEnemyCheck(Board br, String cdt, boolean whiteTurn, int i) throws IOException{
+    	Board copy = copyBoard(br);
+    	int cord[] = new int[4];
+    	int row2,col2;
+    	cord = convert(cdt);
+    	row2 = cord[2];
+    	col2 = cord[3];
+    	String testCdt = "";
+    	
+    	
+        if(whiteTurn==true){
+       		testCdt = convertBack(copy.White[i]) + " " +convertBack(copy.Black[15]);
+       		if( convertBack(copy.White[i]).isEmpty() ||convertBack(copy.Black[15]).isEmpty()){
+       			return false;
+       		}
+       		else if(move(copy,testCdt,true)==true){
+       			return true;
+       		}
+       		
+        }
+        else if(whiteTurn==false){
+        	testCdt = convertBack(copy.Black[i]) + " " +  convertBack(copy.White[15]);
+        	if( convertBack(copy.Black[i]).isEmpty() ||convertBack(copy.White[15]).isEmpty()){
+        		return false;
+        	}
+        	else if(move(copy,testCdt,false)==true){
+        		return true;
+        	}
+        		
+        }
+    	return false;
+    	
     }
     public boolean blockLineOfSight(Board br, String cdt, int killerIndex,String kColor) throws IOException{
     	Board copy = copyBoard(br);
@@ -602,7 +636,7 @@ public class Game {
         	return "invalid";
         }
         else{
-        	if(color.equals("White")){
+        	if(whiteTurn ==true){
         		for(int i = 0;i <copy.Black.length;i++){
         			testCdt = convertBack(copy.Black[i]) + " " +convertBack(copy.White[15]);
         			if( convertBack(copy.Black[i]).isEmpty() ||convertBack(copy.White[15]).isEmpty()){
@@ -613,7 +647,7 @@ public class Game {
         			}
         		}	
         	}
-        	else if(color.equals("Black")){
+        	else if(whiteTurn==false){
         		for(int i = 0;i <copy.White.length;i++){
         			testCdt = convertBack(copy.White[i]) + " " +  convertBack(copy.Black[15]);
         			if( convertBack(copy.White[i]).isEmpty() ||convertBack(copy.Black[15]).isEmpty()){
@@ -639,7 +673,7 @@ public class Game {
     	String color = copy.board[row2][col2].getColor();
     	boolean result;
     	
-        if(color.equals("White")){
+        if(whiteTurn==true){
         	for(int i = 0;i <copy.White.length;i++){
         		testCdt = convertBack(copy.White[i]) + " " +convertBack(copy.Black[15]);
         		if( convertBack(copy.White[i]).isEmpty() ||convertBack(copy.Black[15]).isEmpty()){
@@ -650,7 +684,7 @@ public class Game {
         		}
         	}	
         }
-        else if(color.equals("Black")){
+        else if(whiteTurn==false){
         	for(int i = 0;i <copy.Black.length;i++){
         		testCdt = convertBack(copy.Black[i]) + " " +  convertBack(copy.White[15]);
         		if( convertBack(copy.Black[i]).isEmpty() ||convertBack(copy.White[15]).isEmpty()){
