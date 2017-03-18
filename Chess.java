@@ -18,6 +18,7 @@ public class Chess {
 		boolean whiteTurn = true;
 		boolean moveValue;
 		br.toString();
+		String endGame = "";
 		while (true) {
 			if (whiteTurn == true) {
 				// System.out.print("White's move: ");
@@ -26,8 +27,9 @@ public class Chess {
 				// System.out.print("Blacks's move: ");
 				System.out.printf("Black's move:");
 			}
-			input = sc.nextLine();
+		input = sc.nextLine();
 			if (input.toLowerCase().equals("resign")) {
+				endGame = "Resign";
 				break;
 			} 
 			else if (input.length() == 11) {
@@ -35,6 +37,10 @@ public class Chess {
 					draw = true;
 				}
 			} 
+			else if(input.equals("draw")&& draw ==true){
+				endGame = "Draw";
+				break;
+			}
 			else {
 				if(game.friendlyCheck(br, input, whiteTurn).equals("invalid")){
 					System.out.println("Invalid move try again");
@@ -46,7 +52,11 @@ public class Chess {
 				}
 				else {
 						moveValue = game.move(br, input, whiteTurn);
-						if(game.enemyCheck(br, input, whiteTurn).equals("enemyCheck")){
+						if(game.checkMate(br, input, whiteTurn)==true){
+							endGame = "CheckMate";
+							break;
+						}
+						else if(game.enemyCheck(br, input, whiteTurn).equals("enemyCheck")){
 							System.out.println("Check");
 						}
 						resetEpos(br,whiteTurn);
@@ -54,6 +64,15 @@ public class Chess {
 					whiteTurn = changeTurn(whiteTurn);
 					br.toString();
 				}
+			}
+			if(endGame.equals("CheckMate")){
+				System.out.println("CheckMate! " + whiteTurn + " Wins!");
+			}
+			else if(endGame.equals("Draw")){
+				System.out.println("Game Ended---> Draw");
+			}
+			else if(endGame.equals("Resign")){
+				System.out.println("Game Ended---> " + whiteTurn + " resigned!");
 			}
 		}
 	
