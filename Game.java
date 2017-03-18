@@ -20,8 +20,6 @@ public class Game {
         col1 = cor[1];
         row2 = cor[2];
         col2 = cor[3];
-        //System.out.println(row1 + "," + col1 + "-->" + row2 + "," + col2);
-        //System.out.println(br.board[row1][col1].getClass());
         if(row1==row2 && col1 ==col2){
         	return false;
         }
@@ -103,9 +101,490 @@ public class Game {
         }
         return true;
     }
-    public Board simulate(Board copy, String cdt, boolean turn){
-    	//copy = move(copy)
-    	return copy;
+    public boolean checkMate(Board br, String cdt, boolean turn) throws IOException{
+    	//base position of king is in line of sight for more than one enemy and king cant move out of check
+    	Board copy = copyBoard(br);
+    	int cord[] = new int[4];
+    	int row2,col2,kRow,kCol;
+    	King kObject = new King();
+    	cord = convert(cdt);
+    	row2 = cord[2];
+    	col2 = cord[3];
+    	String testCdt = "";
+    	String color = copy.board[row2][col2].getColor();
+    	String[] validCoordinates = new String[8];
+    	boolean result;
+    	String kCoordinate = "";
+    	int checkCounter = 0;
+    	int kMoveCounter=0;
+    	String[] pieceKInCheck = new String[1];
+    	String counterKillInput = ""; 
+    	int cantSaveKing = 0;
+    	int killerIndex = 0;
+    	String blockCoordinate = "";
+    	//if piece that moves is white, seeing if black king is in check
+        if(color.equals("White")){
+        	//getting coordinates of of the black king
+        	kRow = Character.getNumericValue(br.Black[15].charAt(0));
+        	kCol = Character.getNumericValue(br.Black[15].charAt(1));
+        	
+        	//getting all possible moves for king based in its location
+        	validCoordinates = kObject.possibleMoves(kRow, kCol);
+        	
+        	for(int i = 0;i <copy.White.length;i++){
+        		//checking every white piece to see if it has king in line of sight
+        		testCdt = convertBack(copy.White[i]) + " " +convertBack(copy.Black[15]);
+        		//if the coordinate is illegal for the king
+        		if( convertBack(copy.White[i]).isEmpty()){
+        			continue;
+        		}
+        		//if a piece has the king in its line of sight
+        		else if(enemyCheck(copy,testCdt,false).equals("enemyCheck")){
+        			//save that piece's info
+        			pieceKInCheck[0] = convertBack(copy.White[i]);
+        			killerIndex = i;
+        			checkCounter++;
+        		}
+        		//if more than one piece has king in check in base position break out of loop
+        		if(checkCounter>1){
+        			break;
+        		}
+        	}	
+        }
+        //Same as above if statement
+        else if(color.equals("Black")){
+        	kRow = Character.getNumericValue(br.White[15].charAt(0));
+        	kCol = Character.getNumericValue(br.White[15].charAt(1));
+        	validCoordinates = kObject.possibleMoves(kRow, kCol);
+        	for(int i = 0;i <copy.Black.length;i++){
+        		testCdt = convertBack(copy.Black[i]) + " " +  convertBack(copy.White[15]);
+        		if( convertBack(copy.Black[i]).isEmpty()){
+        			continue;
+        		}
+        		else if(enemyCheck(copy,testCdt,true).equals("enemyCheck")){
+        			pieceKInCheck[0] = convertBack(copy.Black[i]);
+        			killerIndex = i;
+        			checkCounter++;
+        		}
+        		if(checkCounter>1){
+        			break;
+        		}
+        	}	
+        }
+        //get a fresh board based on the original game board passed in by chess class
+        copy = copyBoard(br);
+        //Scenario #1--> more than one piece has king in check, king has to move
+        if(checkCounter >1 && color.equals("White")){
+        	for(int i = 0;i<8;i++){
+        		//if the king can move to this spot on the board
+        		if(!validCoordinates[i].isEmpty()){
+        			kCoordinate = convertBack(copy.Black[15]) + " " + convertBack(validCoordinates[i]);
+        			//is there a spot the king can move that gets it out of check
+        			if(friendlyCheck(copy, kCoordinate,false).equals("notInFriendlyCheck")){
+        				return false;
+        			}
+        			else{
+        				kMoveCounter++;
+        			}
+        		}
+        	}
+        	if(kMoveCounter==8){
+        		return true;
+        	}
+        }
+        //more than one black piece has the white king in check
+        else if(checkCounter >1 && color.equals("Black")){
+        	for(int i = 0;i<8;i++){
+        		//if the king can move to this spot on the board
+        		if(!validCoordinates[i].isEmpty()){
+        			kCoordinate = convertBack(copy.White[15]) + " " + convertBack(validCoordinates[i]);
+        			//if theres a piece in the way or the king will be in check if it moves, increment
+        			if(friendlyCheck(copy, kCoordinate,false).equals("notInFriendlyCheck")){
+        				return false;
+        			}
+        			else{
+        				kMoveCounter++;
+        			}
+        		}
+        		else{
+        			kMoveCounter++;
+        		}
+        	}
+        	if(kMoveCounter == 8){
+        		return true;
+        	}
+        }
+        //Only one piece has black king in check
+        else if(checkCounter ==1 && color.equals("White")){
+        	for(int i = 0;i<8;i++){
+        		if(!validCoordinates[i].isEmpty()){
+        			kCoordinate = convertBack(copy.Black[15]) + " " + convertBack(validCoordinates[i]);
+        			//if theres a friendly piece in the way or the king will be in check if it moves, increment
+        			if(friendlyCheck(copy, kCoordinate,false).equals("notInFriendlyCheck")){
+        				return false;
+        			}
+        			else{
+        				kMoveCounter++;
+        			}
+        		}
+        		else{
+        			kMoveCounter++;
+        		}
+        	}
+        	copy = copyBoard(br);
+        	for(int i = 0;i<15;i++){
+        		counterKillInput = convertBack(copy.Black[i]) + " " + pieceKInCheck[0];
+        		if(convertBack(copy.Black[i]).isEmpty()){
+        			cantSaveKing++;
+        			continue;
+        		}
+        		else{
+        			
+        			if(friendlyCheck(copy, counterKillInput,false).equals("notInFriendlyCheck")){
+        				return false;
+        			}
+        			else{
+        				cantSaveKing++;
+        			}
+        		}
+        	}
+        	blockCoordinate = pieceKInCheck[0] + " " + convertBack(br.Black[15]);
+        	if(cantSaveKing == 15&& kMoveCounter == 8&& blockLineOfSight(br,blockCoordinate,killerIndex,"Black" )==false){
+        		return true;
+        	}
+        }
+        
+        //Only one piece has black king in check
+        else if(checkCounter ==1 && color.equals("Black")){
+        	for(int i = 0;i<8;i++){
+        		if(!validCoordinates[i].isEmpty()){
+        			kCoordinate = convertBack(copy.White[15]) + " " + convertBack(validCoordinates[i]);
+        			//if theres a friendly piece in the way or the king will be in check if it moves, increment
+        			if(friendlyCheck(copy, kCoordinate,true).equals("notInFriendlyCheck")){
+        				return false;
+        			}
+        			else{
+        				kMoveCounter++;
+        			}
+        		}
+        		else{
+        			kMoveCounter++;
+        		}
+        	}
+        	copy = copyBoard(br);
+        	for(int i = 0;i<15;i++){
+        		counterKillInput = convertBack(copy.White[i]) + " " + pieceKInCheck[0];
+        		if(convertBack(copy.White[i]).isEmpty()){
+        			cantSaveKing++;
+        			continue;
+        		}
+        		else{
+        			
+        			if(friendlyCheck(copy, counterKillInput,true).equals("notInFriendlyCheck")){
+        				return false;
+        			}
+        			else{
+        				cantSaveKing++;
+        			}
+        		}
+        	}
+        	blockCoordinate = pieceKInCheck[0] + " " + convertBack(br.White[15]);
+        	if(cantSaveKing == 15&& kMoveCounter == 8&& blockLineOfSight(br,blockCoordinate,killerIndex,"White" )==false){
+        		return true;
+        	}
+        }
+    
+        
+    	return false;
+    }
+    public boolean blockLineOfSight(Board br, String cdt, int killerIndex,String kColor) throws IOException{
+    	Board copy = copyBoard(br);
+    	int[] cor = convert(cdt);
+    	int kRow,kCol,pRow,pCol;
+    	pRow = cor[0];
+    	pCol = cor[1];
+    	kRow = cor[2];
+    	kCol = cor[3];
+    	String direction = "";
+    	String blockCoordinate = "";
+    	String blockDestination = "";
+    	Queen piece = new Queen();
+    	if(killerIndex==10|| killerIndex==11){
+    		return false;
+    	}
+    	direction = piece.rook.direction(pRow, pCol, kRow, kCol);
+		if(direction.equals("invalid")){
+			direction = piece.bishop.direction(pRow, pCol,kRow, kCol);
+		}
+    	if(kColor.equals("White")){
+			if(direction.equals("nor")){
+				for(int i = pRow-1;i<kRow;i--){
+					for(int j = 0;j<15;j++){
+						blockDestination = "" + i + pCol;
+						blockCoordinate = convertBack(copy.White[j]) + " " + convertBack(blockDestination);
+						if(convertBack(copy.White[j]).isEmpty()){
+							continue;
+						}
+						else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+			else if(direction.equals("sou")){
+				for(int i = pRow+1;i>kRow;i++){
+					for(int j = 0;j<15;j++){
+						blockDestination = "" + i + pCol;
+						blockCoordinate = convertBack(copy.White[j]) + " " + convertBack(blockDestination);
+						if(convertBack(copy.White[j]).isEmpty()){
+							continue;
+						}
+						else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+			else if(direction.equals("ea")){
+				for(int i = pCol+1;i<kCol;i++){
+					for(int j = 0;j<15;j++){
+						blockDestination = "" + pRow + i;
+						blockCoordinate = convertBack(copy.White[j]) + " " + convertBack(blockDestination);
+						if(convertBack(copy.White[j]).isEmpty()){
+							continue;
+						}
+						else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+			else if(direction.equals("we")){
+				for(int i = pCol-1;i>kCol;i--){
+					for(int j = 0;j<15;j++){
+						blockDestination = "" + pRow + i;
+						blockCoordinate = convertBack(copy.White[j]) + " " + convertBack(blockDestination);
+						if(convertBack(copy.White[j]).isEmpty()){
+							continue;
+						}
+						else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+			else if(direction.equals("ne")){
+				for(int i=pRow-1;i>kRow;i--){
+	                for(int j = pCol+1;j<kCol;j++){
+	                	for(int k = 0;j<15;j++){
+	                		blockDestination = "" + i + j;
+							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
+							if(convertBack(copy.White[k]).isEmpty()){
+								continue;
+							}
+							else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+								return true;
+							}
+						}
+	                    i--;
+	                }
+	            }
+				return false;
+			}
+			else if(direction.equals("nw")){
+				for(int i=pRow-1;i>kRow;i--){
+	                for(int j = pCol-1;j>kCol;j--){
+	                	for(int k = 0;j<15;j++){
+	                		blockDestination = "" + i + j;
+							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
+							if(convertBack(copy.White[k]).isEmpty()){
+								continue;
+							}
+							else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+								return true;
+							}
+						}
+	                    i--;
+	                }
+	            }
+				return false;
+			}
+			else if(direction.equals("se")){
+				for(int i=pRow+1;i<kRow;i++){
+	                for(int j = pCol+1;j<kCol;j++){
+	                	for(int k = 0;j<15;j++){
+	                		blockDestination = "" + i + j;
+							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
+							if(convertBack(copy.White[k]).isEmpty()){
+								continue;
+							}
+							else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+								return true;
+							}
+						}
+	                    i--;
+	                }
+	            }
+				return false;
+			}
+			else if(direction.equals("sw")){
+				for(int i=pRow+1;i<kRow;i++){
+	                for(int j = pCol-1;j>kCol;j--){
+	                	for(int k = 0;j<15;j++){
+	                		blockDestination = "" + i + j;
+							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
+							if(convertBack(copy.White[k]).isEmpty()){
+								continue;
+							}
+							else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+								return true;
+							}
+						}
+	                    i--;
+	                }
+	            }
+				return false;
+			}
+		}
+		else if(kColor.equals("Black")){
+			if(direction.equals("nor")){
+				for(int i = pRow-1;i<kRow;i--){
+					for(int j = 0;j<15;j++){
+						blockDestination = "" + i + pCol;
+						blockCoordinate = convertBack(copy.White[j]) + " " + convertBack(blockDestination);
+						if(convertBack(copy.White[j]).isEmpty()){
+							continue;
+						}
+						else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+			else if(direction.equals("sou")){
+				for(int i = pRow+1;i>kRow;i++){
+					for(int j = 0;j<15;j++){
+						blockDestination = "" + i + pCol;
+						blockCoordinate = convertBack(copy.White[j]) + " " + convertBack(blockDestination);
+						if(convertBack(copy.White[j]).isEmpty()){
+							continue;
+						}
+						else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+			else if(direction.equals("ea")){
+				for(int i = pCol+1;i<kCol;i++){
+					for(int j = 0;j<15;j++){
+						blockDestination = "" + pRow + i;
+						blockCoordinate = convertBack(copy.White[j]) + " " + convertBack(blockDestination);
+						if(convertBack(copy.White[j]).isEmpty()){
+							continue;
+						}
+						else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+			else if(direction.equals("we")){
+				for(int i = pCol-1;i>kCol;i--){
+					for(int j = 0;j<15;j++){
+						blockDestination = "" + pRow + i;
+						blockCoordinate = convertBack(copy.White[j]) + " " + convertBack(blockDestination);
+						if(convertBack(copy.White[j]).isEmpty()){
+							continue;
+						}
+						else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+			else if(direction.equals("ne")){
+				for(int i=pRow-1;i>kRow;i--){
+	                for(int j = pCol+1;j<kCol;j++){
+	                	for(int k = 0;j<15;j++){
+	                		blockDestination = "" + i + j;
+							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
+							if(convertBack(copy.White[k]).isEmpty()){
+								continue;
+							}
+							else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+								return true;
+							}
+						}
+	                    i--;
+	                }
+	            }
+				return false;
+			}
+			else if(direction.equals("nw")){
+				for(int i=pRow-1;i>kRow;i--){
+	                for(int j = pCol-1;j>kCol;j--){
+	                	for(int k = 0;j<15;j++){
+	                		blockDestination = "" + i + j;
+							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
+							if(convertBack(copy.White[k]).isEmpty()){
+								continue;
+							}
+							else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+								return true;
+							}
+						}
+	                    i--;
+	                }
+	            }
+				return false;
+			}
+			else if(direction.equals("se")){
+				for(int i=pRow+1;i<kRow;i++){
+	                for(int j = pCol+1;j<kCol;j++){
+	                	for(int k = 0;j<15;j++){
+	                		blockDestination = "" + i + j;
+							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
+							if(convertBack(copy.White[k]).isEmpty()){
+								continue;
+							}
+							else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+								return true;
+							}
+						}
+	                    i--;
+	                }
+	            }
+				return false;
+			}
+			else if(direction.equals("sw")){
+				for(int i=pRow+1;i<kRow;i++){
+	                for(int j = pCol-1;j>kCol;j--){
+	                	for(int k = 0;j<15;j++){
+	                		blockDestination = "" + i + j;
+							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
+							if(convertBack(copy.White[k]).isEmpty()){
+								continue;
+							}
+							else if(friendlyCheck(copy, blockCoordinate, true).equals("notInFriendlyCheck")){
+								return true;
+							}
+						}
+	                    i--;
+	                }
+	            }
+				return false;
+			}
+		}
+    	return false;
     }
 
     public String friendlyCheck(Board br, String cdt, boolean whiteTurn) throws IOException {
