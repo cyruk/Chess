@@ -36,6 +36,7 @@ public class Chess {
 				if (input.substring(6, 11).equals("draw?")) {
 					draw = true;
 				}
+				whiteTurn = changeTurn(whiteTurn);
 			} 
 			else if(input.equals("draw")&& draw ==true){
 				endGame = "Draw";
@@ -62,17 +63,19 @@ public class Chess {
 						resetEpos(br,whiteTurn);
 					}
 					whiteTurn = changeTurn(whiteTurn);
+					System.out.println();
 					br.toString();
 				}
 			}
 			if(endGame.equals("CheckMate")){
-				System.out.println("CheckMate! " + whiteTurn + " Wins!");
+				br.toString();
+				System.out.println("CheckMate! " + turnColor(whiteTurn) + " Wins!");
 			}
 			else if(endGame.equals("Draw")){
 				System.out.println("Game Ended---> Draw");
 			}
 			else if(endGame.equals("Resign")){
-				System.out.println("Game Ended---> " + whiteTurn + " resigned!");
+				System.out.println("Game Ended---> " + turnColor(whiteTurn) + " resigned!");
 			}
 		}
 	
@@ -83,6 +86,12 @@ public class Chess {
 			return false;
 		}
 		return true;
+	}
+	public static String turnColor(boolean whiteTurn){
+		if (whiteTurn == true) {
+			return "White";
+		}
+		return "Black";
 	}
 	public static void resetEpos(Board br, boolean whiteTurn){
 		if (whiteTurn == true){
