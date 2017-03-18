@@ -1,4 +1,3 @@
-
 package samp;
 
 import java.io.IOException;
@@ -94,9 +93,36 @@ public class King extends Piece {
         return "Kill";
     }
 
-    public boolean properMove(int row1, int col1, int row2, int col2){
-
-        return false;
+    public String[] possibleMoves(int kRow, int kCol){
+    	int[] row = new int[8];
+    	int[] col = new int[8];
+        String[] validCoordinates = new String[8];
+    	row[0] = kRow-1;
+        row[1] = kRow-1;
+        row[2] = kRow-1;
+        row[3] = kRow+1;
+        row[4] = kRow+1;
+        row[5] = kRow+1;
+        row[6] = kRow;
+        row[7] = kRow;
+        col[0] = kCol;
+        col[1] = kCol-1;		
+        col[2] = kCol+1;		
+        col[3] = kCol;
+        col[4] = kCol-1;
+        col[5] = kCol+1;
+        col[6] = kCol-1;
+        col[7] = kCol+1;
+        
+        for(int i=0;i<8;i++){
+        	if(row[i]<0 || row[i] >7||col[i]<0||col[i]>7 ){
+        		validCoordinates[i] = "";
+        	}
+        	else{
+        		validCoordinates[i] = "" + row[i] + col[i];
+        	}
+        }
+        return validCoordinates;
     }
     public String getName(){
         return name;
