@@ -12,6 +12,8 @@ public class Queen extends Piece {
     public String name;
     public  boolean moved;
     public int id;
+    public Rook rook = new Rook();
+    public Bishop bishop = new Bishop();
 
     public Queen(String color, String name, int id){
         this.color = color;
@@ -22,8 +24,7 @@ public class Queen extends Piece {
     }
     public Queen(){}
     public String isValid(int row1, int col1, int row2, int col2, Board br) throws IOException {
-        Rook rook = new Rook();
-        Bishop bishop = new Bishop();
+        
         if(rook.isValid(row1,col1,row2,col2,br).equals("No") && bishop.isValid(row1,col1,row2,col2,br).equals("No")){
             return "No";
         }
