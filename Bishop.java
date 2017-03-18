@@ -1,4 +1,4 @@
- samp;
+package samp;
 
 import java.io.IOException;
 
@@ -11,12 +11,15 @@ public class Bishop extends Piece {
     public boolean ePos;
     public String name;
     public  boolean moved;
+    public int id;
 
-    public Bishop(String color, String name){
+    public Bishop(String color, String name, int id){
         this.color = color;
         this.name = name;
         ePos = false;
         moved = false;
+        this.id = id;
+
     }
     public Bishop(){}
     public String isValid(int row1, int col1, int row2, int col2, Board br) throws IOException {
@@ -33,6 +36,7 @@ public class Bishop extends Piece {
                     if(!(br.board[i][j].getClass().isInstance(new Empty()))){
                         return "No";
                     }
+                    i--;
                 }
             }
         }
@@ -42,6 +46,7 @@ public class Bishop extends Piece {
                     if(!(br.board[i][j].getClass().isInstance(new Empty()))){
                         return "No";
                     }
+                    i--;
                 }
             }
         }
@@ -51,6 +56,7 @@ public class Bishop extends Piece {
                     if(!(br.board[i][j].getClass().isInstance(new Empty()))){
                         return "No";
                     }
+                    i++;
                 }
             }
         }
@@ -60,6 +66,7 @@ public class Bishop extends Piece {
                     if(!(br.board[i][j].getClass().isInstance(new Empty()))){
                         return "No";
                     }
+                    i++;
                 }
             }
         }
@@ -74,9 +81,9 @@ public class Bishop extends Piece {
     }
 
     public String direction(int row1,int col1, int row2, int col2){
-        double slope = (row2-row1)/(col2-col1);
         double dX = col2-col1;
         double dY = row2-row1;
+        double slope = (dY/dX);
         if(slope != 1.0 && slope != -1.0){
             return "invalid";
         }
@@ -92,12 +99,13 @@ public class Bishop extends Piece {
         else if(dY<0&&dX>0){
             return "ne";
         }
-
         return "invalid";
     }
     public String getName(){
         return name;
     }
     public String getColor(){return color;}
+    public int getId(){
+        return id;
+    }
 }
-
