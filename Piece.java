@@ -24,4 +24,9 @@ public class Piece{
     public int getId(){
         return id;
     }
+    public String[] possibleMoves(){
+    	String[] arr = new String[0];
+    	return arr;
+    }
 }
+
