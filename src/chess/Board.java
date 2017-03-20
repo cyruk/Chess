@@ -175,7 +175,14 @@ public class Board
     		}
     	}
     	
-    	return null;
+    	for (int i = 0; i < 9; i++)
+    	{
+    		if (checks[i] == false)
+    		{
+    			return "no";
+    		}
+    	}
+    	return "yes";
     }
     
     //find the legal moves of the king

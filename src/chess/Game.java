@@ -27,18 +27,12 @@ public class Game
 				//checks if this piece can reach the king
 				if (newGame.check(cord[2], cord[3]).equals("yes"))
 				{
-					if (newGame.killCheck(cord[2], cord[3]).equals("yes"))
+					if (newGame.killCheck(cord[2], cord[3]).equals("yes") || newGame.moveCheck(cord[2], cord[3]).equals("yes"))
 					{
 						return "check";
 					}
-					else if (newGame.moveCheck(cord[2], cord[3]).equals("yes"))
+					else if (newGame.checkMate(cord[2],cord[3]).equals("yes"))
 					{
-						
-					}
-					else
-					{
-						//checks if this check is a check mate
-						System.out.println(newGame.checkMate(cord[2],cord[3]));
 						return "checkmate";
 					}
 				}
