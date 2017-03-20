@@ -1,20 +1,19 @@
 package chess;
 
 public class Knight extends Piece{
-	public String color;
-    public boolean ePos;
+	public char color;
     public String name;
 
-    public Knight(String color, boolean ePos, String name)
+    public Knight(char color, String name)
     {
     	this.color = color;
-    	this.ePos = ePos;
     	this.name = name;
     }
     
-    public String isValid(int col1, int row1, int col2, int row2, Piece[][] board)
+    public String isValid(int row1, int col1, int row2, int col2, Piece[][] board)
     {
-		if(board[row1][col1].color == board[row2][col2].color)
+  
+		if(board[row1][col1].getColor() == board[row2][col2].getColor())
 		{
 			return "No";
 		}
@@ -22,9 +21,6 @@ public class Knight extends Piece{
 		{
 			if(Math.abs(row1 - row2) == 1 && Math.abs(col1 - col2) == 2 || Math.abs(row1 - row2) == 2 && Math.abs(col1 - col2) == 1)
 			{
-				board[row1][col1] = board[row2][col2];
-				//make it empty
-				//board[row1][col1] = emptysomething;
 				return "Yes";
 			}
 			else
@@ -34,7 +30,7 @@ public class Knight extends Piece{
 		}
     }
     
-    public String getColor(){
+    public char getColor(){
         return color;
     }
 

@@ -1,25 +1,18 @@
-package samp;
+package chess;
 
-/**
- * Created by Shah on 3/8/2017.
- */
-public class King extends Piece {
-    public String color;
-    public boolean ePos;
+public class King extends Piece{
+	public char color;
     public String name;
-    public  boolean moved;
 
-
-    public King(String color, String name){
-        this.color = color;
-        this.name = name;
-        ePos = false;
-        moved = false;
-    }/*
-
-    public String isValid(int x1, int y1, int x2, int y2, Piece[][] board){
-        if(
-    }*/
+    public King(char color, String name)
+    {
+    	this.color = color;
+    	this.name = name;
+    }
+    
+    public char getColor(){
+        return color;
+    }
 
     public String getName(){
         return name;
