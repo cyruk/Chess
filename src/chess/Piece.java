@@ -24,4 +24,9 @@ public class Piece{
 			System.out.println("hello");
 		return null;
 	}
+	
+	public int[] returnSlope(int row1, int col1, int row2, int col2)
+	{
+		return null;
+	}
 }

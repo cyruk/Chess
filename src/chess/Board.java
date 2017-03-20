@@ -106,7 +106,14 @@ public class Board
         {
             for(int j = 0;j<9;j++)
             {
-	            System.out.print(board[i][j].getName() + " ");
+            	if (board[i][j] instanceof Empty & ((i % 2 == 1 & j % 2 == 0) || (i % 2 == 0 & j % 2 == 1)) & i < 8 & j < 8)
+            	{
+            		System.out.print("## ");
+            	}
+            	else
+            	{
+            		System.out.print(board[i][j].getName() + " ");
+            	}
             }
             System.out.println();
         }
@@ -156,10 +163,13 @@ public class Board
     			//find pieces that are same color
     			if (color == board[i][j].getColor())
     			{
-    				//loop through the legal moves the king has and check if the piece can move that the legal moves
+    				//loop through the legal moves the king has and check if the piece can move to the places the king can move
     				for(int w = 0; w < 16; w+=2)
     				{
-    					
+    					if(board[i][j].isValid(i, j, hello[w], hello[w+1], board).equals("yes"))
+    					{
+    						checks[w/2] = true;
+    					}
     				}
     			}
     		}
@@ -168,12 +178,13 @@ public class Board
     	return null;
     }
     
-    //find the legal moves of the king COMPLETE THIS
+    //find the legal moves of the king
     public int[] findLegal(char color)
     {
-    	int [] hello = new int[16];
+    	int [] hello = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
     	int row1, col1;
-    	//want the opposite of the piece color
+    	
+    	//want the opposite king's position of the piece color
     	if (color == 'w')
     	{
     		row1 = bKing[0];
@@ -186,116 +197,84 @@ public class Board
     	}
     	
     	//checks if it will be out of bounds
-    	if (row1 + 1 < 8 & col1 + 1 < 8)
+    	if (row1 - 1 >= 0 & col1 - 1 >= 0)
     	{
-	    	//checks if the king can move to a certain position 
-	    	if (board[row1][col1].isValid(row1, col1, row1 + 1, col1 + 1, board).equals("yes"))
-	    	{
-	    		hello[0] = row1 + 1;
-	    		hello[1] = col1 + 1;
-	    	}
-	    	else
-	    	{
-	    		hello[0] = -1;
-	    		hello[1] = -1;
-	    	}
-    	}
-    	
-    	if (row1 - 1 > 0 & col1 - 1 > 0)
-    	{
+	    	//checks if the king can move to a certain position
+    		//upper left of the king
 	    	if (board[row1][col1].isValid(row1, col1, row1 - 1, col1 - 1, board).equals("yes"))
 	    	{
 	    		hello[0] = row1 - 1;
 	    		hello[1] = col1 - 1;
 	    	}
-	    	else
+    	}
+    	
+    	if (row1 - 1 >= 0)
+    	{
+    		//above the king
+	    	if (board[row1][col1].isValid(row1, col1, row1 - 1, col1, board).equals("yes"))
 	    	{
-	    		hello[0] = -1;
-	    		hello[1] = -1;
+	    		hello[2] = row1 - 1;
+	    		hello[3] = col1;
 	    	}
     	}
     	
-    	if (row1 - 1 > 0 & col1 - 1 > 0)
+    	if (row1 - 1 >= 0 & col1 + 1 < 8)
     	{
-	    	if (board[row1][col1].isValid(row1, col1, row1 - 1, col1 - 1, board).equals("yes"))
+    		//top right of the king
+	    	if (board[row1][col1].isValid(row1, col1, row1 - 1, col1 + 1, board).equals("yes"))
 	    	{
-	    		hello[0] = row1 + 1;
-	    		hello[1] = col1 + 1;
-	    	}
-	    	else
-	    	{
-	    		hello[0] = -1;
-	    		hello[1] = -1;
+	    		hello[4] = row1 - 1;
+	    		hello[5] = col1 + 1;
 	    	}
     	}
     	
-    	if (row1 - 1 > 0 & col1 - 1 > 0)
+    	if (col1 - 1 > 0)
     	{
-	    	if (board[row1][col1].isValid(row1, col1, row1 - 1, col1 - 1, board).equals("yes"))
+    		//left of the king
+	    	if (board[row1][col1].isValid(row1, col1, row1, col1 - 1, board).equals("yes"))
 	    	{
-	    		hello[0] = row1 + 1;
-	    		hello[1] = col1 + 1;
-	    	}
-	    	else
-	    	{
-	    		hello[0] = -1;
-	    		hello[1] = -1;
+	    		hello[6] = row1;
+	    		hello[7] = col1 - 1;
 	    	}
     	}
     	
-    	if (row1 - 1 > 0 & col1 - 1 > 0)
+    	if (col1 + 1 < 8)
     	{
-	    	if (board[row1][col1].isValid(row1, col1, row1 - 1, col1 - 1, board).equals("yes"))
+    		// right of the king
+	    	if (board[row1][col1].isValid(row1, col1, row1, col1 + 1, board).equals("yes"))
 	    	{
-	    		hello[0] = row1 + 1;
-	    		hello[1] = col1 + 1;
-	    	}
-	    	else
-	    	{
-	    		hello[0] = -1;
-	    		hello[1] = -1;
+	    		hello[8] = row1;
+	    		hello[9] = col1 + 1;
 	    	}
     	}
     	
-    	if (row1 - 1 > 0 & col1 - 1 > 0)
+    	if (row1 + 1 < 8 & col1 - 1 > 0)
     	{
-	    	if (board[row1][col1].isValid(row1, col1, row1 - 1, col1 - 1, board).equals("yes"))
+    		//bottom left of the king
+	    	if (board[row1][col1].isValid(row1, col1, row1 + 1, col1 - 1, board).equals("yes"))
 	    	{
-	    		hello[0] = row1 + 1;
-	    		hello[1] = col1 + 1;
-	    	}
-	    	else
-	    	{
-	    		hello[0] = -1;
-	    		hello[1] = -1;
+	    		hello[10] = row1 + 1;
+	    		hello[11] = col1 - 1;
 	    	}
     	}
     	
-    	if (row1 - 1 > 0 & col1 - 1 > 0)
+    	if (row1 + 1 < 8)
     	{
-	    	if (board[row1][col1].isValid(row1, col1, row1 - 1, col1 - 1, board).equals("yes"))
+    		//below the king
+	    	if (board[row1][col1].isValid(row1, col1, row1 + 1, col1, board).equals("yes"))
 	    	{
-	    		hello[0] = row1 + 1;
-	    		hello[1] = col1 + 1;
-	    	}
-	    	else
-	    	{
-	    		hello[0] = -1;
-	    		hello[1] = -1;
+	    		hello[12] = row1 + 1;
+	    		hello[13] = col1;
 	    	}
     	}
     	
-    	if (row1 - 1 > 0 & col1 - 1 > 0)
+    	if (row1 + 1 < 8 & col1 + 1 < 8)
     	{
-	    	if (board[row1][col1].isValid(row1, col1, row1 - 1, col1 - 1, board).equals("yes"))
+    		//bottom right of the king
+	    	if (board[row1][col1].isValid(row1, col1, row1 + 1, col1 + 1, board).equals("yes"))
 	    	{
-	    		hello[0] = row1 + 1;
-	    		hello[1] = col1 + 1;
-	    	}
-	    	else
-	    	{
-	    		hello[0] = -1;
-	    		hello[1] = -1;
+	    		hello[14] = row1 + 1;
+	    		hello[15] = col1 + 1;
 	    	}
     	}
     	return hello;
@@ -328,5 +307,79 @@ public class Board
     			bKing[1] = col2;
     		}
     	}
+    }
+    
+    public String killCheck(int row1, int col1)
+    {
+    	char color = board[row1][col1].getColor();
+    	//loop through the board
+    	for (int i = 0; i < 8; i++)
+    	{
+    		for (int j = 0; j < 8; j++)
+    		{
+    			//find enemy pieces of the passed piece
+    			if (color != board[i][j].getColor())
+    			{
+    				//check if the enemy piece can kill the piece that put the king in check
+    				if (board[i][j].isValid(i, j, row1, col1, board).equals("yes"))
+    				{
+    					return "yes";
+    				}
+    			}
+    		}
+    	}
+    	return "no";
+    }
+    
+    public String moveCheck(int row1, int col1)
+    {
+    	if (board[row1][col1] instanceof Bishop || board[row1][col1] instanceof Queen || board[row1][col1] instanceof Rook)
+    	{
+	    	char color = board[row1][col1].getColor();
+	    	int kRow, kCol;
+	    	
+	    	//want the opposite king's position in order to find the slope from the piece to the king
+	    	if (board[row1][col1].getColor() == 'w')
+			{
+				kRow = bKing[0];
+				kCol = bKing[1];
+			}
+			else
+			{
+				kRow = wKing[0];
+				kCol = wKing[1];
+			}
+	    	
+	    	//find out the slope of the check
+	    	int vertical, horizontal;
+	    	int[] adsf = board[row1][col1].returnSlope(row1, col1, kRow, kCol);
+	    	vertical = adsf[0];
+	    	horizontal = adsf[1];
+	    	
+    		for (int i = 0; i < 8; i++)
+        	{
+        		for (int j = 0; j < 8; j++)
+        		{
+        			//find enemy pieces of the passed piece
+        			if (color != board[i][j].getColor())
+        			{
+        				//loop from the piece's path to the king
+        				for (int w = row1; w <= kRow; w += vertical)
+        				{
+        					for (int z = col1; z <= kCol; w += horizontal)
+        					{
+        						//if a piece of the opposite color of the piece that put the king in check can move in front of the check
+        						//then it is not a check mate
+        						if (board[i][j].isValid(i, j, w, z, board).equals("yes"))
+        						{
+        							return "yes";
+        						}
+        					}
+        				}
+        			}
+        		}
+        	}
+    	}
+    	return "no";
     }
 }

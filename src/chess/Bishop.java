@@ -54,7 +54,6 @@ public class Bishop extends Piece {
 					//is empty or something
 					if(!(board[holder][holder1] instanceof Empty))
 					{
-						System.out.println("hello");
 						return "No";
 					}
 				}
@@ -76,5 +75,38 @@ public class Bishop extends Piece {
 
     public String getName(){
         return name;
+    }
+    
+    public int[] returnSlope(int row1, int col1, int row2, int col2)
+    {
+    	int vertical = 0;
+		int horizontal = 0;
+		int[] hello = new int[2];
+    	if(Math.abs(row1 - row2) == Math.abs(col1 - col2))
+		{
+			if (row1 - row2 < 0 && col1 - col2 > 0)
+			{
+				vertical = 1;
+				horizontal = -1;
+			}
+			else if (row1 - row2 > 0 && col1 - col2 > 0)
+			{
+				vertical = -1;
+				horizontal = -1;
+			}
+			else if (row1 - row2 < 0 && col1 - col2 < 0)
+			{
+				vertical = 1;
+				horizontal = 1;
+			}
+			else if (row1 - row2 > 0 && col1 - col2 < 0)
+			{
+				vertical = -1;
+				horizontal = 1;
+			}
+		}
+    	hello[0] = vertical;
+    	hello[1] = horizontal;
+    	return hello;
     }
 }
