@@ -3,14 +3,7 @@ if (input.length() > 5)
 	System.out.println("Invalid move try again");
 	countinue;
 }
-else if (!(Math.abs(Character.getNumericValue(input.charAt(1)) - 8) >= 0 
-	& Math.abs(Character.getNumericValue(input.charAt(4)) - 8) >= 0
-	& Math.abs(Character.getNumericValue(input.charAt(1)) - 8) <= 7
-	& Math.abs(Character.getNumericValue(input.charAt(4)) - 8) <= 7
-	& Character.getNumericValue(cdt.charAt(0)) - 10 >= 0
-	& Character.getNumericValue(cdt.charAt(0)) - 10 <= 7
-	& Character.getNumericValue(cdt.charAt(3)) - 10 >= 0
-	& Character.getNumericValue(cdt.charAt(3)) - 10 <= 7)
+else if (input.charAt(2) != ' ')
 	{
 	System.out.println("Invalid move try again");
 	countinue;
