@@ -104,16 +104,16 @@ public class Game {
     public boolean checkMate(Board br, String cdt, boolean turn) throws IOException{
     	//base position of king is in line of sight for more than one enemy and king cant move out of check
     	Board copy = copyBoard(br);
-    	int cord[] = new int[4];
-    	int row2,col2,kRow,kCol;
+    	//int cord[] = new int[4];
+    	int kRow,kCol;
     	King kObject = new King();
-    	cord = convert(cdt);
-    	row2 = cord[2];
-    	col2 = cord[3];
+    	//cord = convert(cdt);
+    	//row2 = cord[2];
+    	//col2 = cord[3];
     	String testCdt = "";
-    	String color = copy.board[row2][col2].getColor();
+    	//String color = copy.board[row2][col2].getColor();
     	String[] validCoordinates = new String[8];
-    	boolean result;
+    	//boolean result;
     	String kCoordinate = "";
     	int checkCounter = 0;
     	int kMoveCounter=0;
@@ -300,11 +300,11 @@ public class Game {
     
     public boolean pieceEnemyCheck(Board br, String cdt, boolean whiteTurn, int i) throws IOException{
     	Board copy = copyBoard(br);
-    	int cord[] = new int[4];
-    	int row2,col2;
-    	cord = convert(cdt);
-    	row2 = cord[2];
-    	col2 = cord[3];
+    	//int cord[] = new int[4];
+    	//int row2,col2;
+    	//cord = convert(cdt);
+    	//row2 = cord[2];
+    	//col2 = cord[3];
     	String testCdt = "";
     	
     	
@@ -414,7 +414,7 @@ public class Game {
 			else if(direction.equals("ne")){
 				for(int i=pRow-1;i>kRow;i--){
 	                for(int j = pCol+1;j<kCol;j++){
-	                	for(int k = 0;j<15;j++){
+	                	for(int k = 0;k<15;k++){
 	                		blockDestination = "" + i + j;
 							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
 							if(convertBack(copy.White[k]).isEmpty()){
@@ -432,7 +432,7 @@ public class Game {
 			else if(direction.equals("nw")){
 				for(int i=pRow-1;i>kRow;i--){
 	                for(int j = pCol-1;j>kCol;j--){
-	                	for(int k = 0;j<15;j++){
+	                	for(int k = 0;k<15;k++){
 	                		blockDestination = "" + i + j;
 							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
 							if(convertBack(copy.White[k]).isEmpty()){
@@ -450,7 +450,7 @@ public class Game {
 			else if(direction.equals("se")){
 				for(int i=pRow+1;i<kRow;i++){
 	                for(int j = pCol+1;j<kCol;j++){
-	                	for(int k = 0;j<15;j++){
+	                	for(int k = 0;k<15;k++){
 	                		blockDestination = "" + i + j;
 							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
 							if(convertBack(copy.White[k]).isEmpty()){
@@ -460,7 +460,7 @@ public class Game {
 								return true;
 							}
 						}
-	                    i--;
+	                    i++;
 	                }
 	            }
 				return false;
@@ -468,7 +468,7 @@ public class Game {
 			else if(direction.equals("sw")){
 				for(int i=pRow+1;i<kRow;i++){
 	                for(int j = pCol-1;j>kCol;j--){
-	                	for(int k = 0;j<15;j++){
+	                	for(int k = 0;k<15;k++){
 	                		blockDestination = "" + i + j;
 							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
 							if(convertBack(copy.White[k]).isEmpty()){
@@ -478,7 +478,7 @@ public class Game {
 								return true;
 							}
 						}
-	                    i--;
+	                    i++;
 	                }
 	            }
 				return false;
@@ -548,7 +548,7 @@ public class Game {
 			else if(direction.equals("ne")){
 				for(int i=pRow-1;i>kRow;i--){
 	                for(int j = pCol+1;j<kCol;j++){
-	                	for(int k = 0;j<15;j++){
+	                	for(int k = 0;k<15;k++){
 	                		blockDestination = "" + i + j;
 							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
 							if(convertBack(copy.White[k]).isEmpty()){
@@ -566,7 +566,7 @@ public class Game {
 			else if(direction.equals("nw")){
 				for(int i=pRow-1;i>kRow;i--){
 	                for(int j = pCol-1;j>kCol;j--){
-	                	for(int k = 0;j<15;j++){
+	                	for(int k = 0;k<15;k++){
 	                		blockDestination = "" + i + j;
 							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
 							if(convertBack(copy.White[k]).isEmpty()){
@@ -584,7 +584,7 @@ public class Game {
 			else if(direction.equals("se")){
 				for(int i=pRow+1;i<kRow;i++){
 	                for(int j = pCol+1;j<kCol;j++){
-	                	for(int k = 0;j<15;j++){
+	                	for(int k = 0;k<15;k++){
 	                		blockDestination = "" + i + j;
 							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
 							if(convertBack(copy.White[k]).isEmpty()){
@@ -594,7 +594,7 @@ public class Game {
 								return true;
 							}
 						}
-	                    i--;
+	                    i++;
 	                }
 	            }
 				return false;
@@ -602,7 +602,7 @@ public class Game {
 			else if(direction.equals("sw")){
 				for(int i=pRow+1;i<kRow;i++){
 	                for(int j = pCol-1;j>kCol;j--){
-	                	for(int k = 0;j<15;j++){
+	                	for(int k = 0;k<15;k++){
 	                		blockDestination = "" + i + j;
 							blockCoordinate = convertBack(copy.White[k]) + " " + convertBack(blockDestination);
 							if(convertBack(copy.White[k]).isEmpty()){
@@ -612,7 +612,7 @@ public class Game {
 								return true;
 							}
 						}
-	                    i--;
+	                    i++;
 	                }
 	            }
 				return false;
@@ -623,13 +623,13 @@ public class Game {
 
     public String friendlyCheck(Board br, String cdt, boolean whiteTurn) throws IOException {
     	Board copy = copyBoard(br);
-    	int cord[] = new int[4];
-    	int row1,col1;
-    	cord = convert(cdt);
-    	row1 = cord[0];
-    	col1 = cord[1];
+    	//int cord[] = new int[4];
+    	//int row1,col1;
+    	//cord = convert(cdt);
+    	//row1 = cord[0];
+    	//col1 = cord[1];
     	String testCdt = "";
-    	String color = copy.board[row1][col1].getColor();
+    	//String color = copy.board[row1][col1].getColor();
     	boolean result;
     	result = move(copy, cdt, whiteTurn);
         if (result == false){
@@ -664,14 +664,14 @@ public class Game {
     
     public String enemyCheck(Board br, String cdt, boolean whiteTurn) throws IOException {
     	Board copy = copyBoard(br);
-    	int cord[] = new int[4];
-    	int row2,col2;
-    	cord = convert(cdt);
-    	row2 = cord[2];
-    	col2 = cord[3];
+    	//int cord[] = new int[4];
+    	//int row2,col2;
+    	//cord = convert(cdt);
+    	//row2 = cord[2];
+    	//col2 = cord[3];
     	String testCdt = "";
-    	String color = copy.board[row2][col2].getColor();
-    	boolean result;
+    	//String color = copy.board[row2][col2].getColor();
+    	//boolean result;
     	
         if(whiteTurn==true){
         	for(int i = 0;i <copy.White.length;i++){
