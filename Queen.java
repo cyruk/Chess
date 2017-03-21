@@ -1,20 +1,47 @@
 package chess;
 
-public class Queen extends Piece{
-	public char color;
-    public String name;
+import java.io.IOException;
 
-    public Queen(char color, String name)
-    {
-    	this.color = color;
-    	this.name = name;
+/**
+ * Created by Shah on 3/9/2017.
+ */
+public class Queen extends Piece {
+
+    public String color;
+    public boolean ePos;
+    public String name;
+    public  boolean moved;
+    public int id;
+    public Rook rook = new Rook();
+    public Bishop bishop = new Bishop();
+
+    public Queen(String color, String name, int id){
+        this.color = color;
+        this.name = name;
+        ePos = false;
+        moved = false;
+        this.id = id;
     }
-    
-    public char getColor(){
-        return color;
+    public Queen(){}
+    public String isValid(int row1, int col1, int row2, int col2, Board br) throws IOException {
+        
+        if(rook.isValid(row1,col1,row2,col2,br).equals("No") && bishop.isValid(row1,col1,row2,col2,br).equals("No")){
+            return "No";
+        }
+        else if(rook.isValid(row1,col1,row2,col2,br).equals("FreeMove") || bishop.isValid(row1,col1,row2,col2,br).equals("FreeMove")){
+            return "FreeMove";
+        }
+        else if(rook.isValid(row1,col1,row2,col2,br).equals("Kill") || bishop.isValid(row1,col1,row2,col2,br).equals("Kill")){
+            return "Kill";
+        }
+        return "No";
     }
 
     public String getName(){
         return name;
+    }
+    public String getColor(){return color;}
+    public int getId(){
+        return id;
     }
 }
