@@ -1,7 +1,7 @@
 package samp;
 
 import java.io.IOException;
-import java.util.Objects;
+
 
 /**
  * Created by Shah on 3/2/2017.
@@ -11,22 +11,23 @@ public class Rook extends Piece {
     public boolean ePos;
     public String name;
     public  boolean moved;
+    public int id;
 
-    public Rook(String color, String name){
+    public Rook(String color, String name, int id){
         this.color = color;
         this.name = name;
         ePos = false;
         moved = false;
+        this.id = id;
     }
     public Rook(){}
 
     public String isValid(int row1, int col1, int row2, int col2, Board br) throws IOException {
         String dir = direction(row1,col1,row2,col2);
         String cl = br.board[row1][col1].getColor();
-        System.out.println(dir);
         int i;
         if(dir.equals("invalid")){
-            System.out.println("Diagonal move");
+
             return "No";
         }
         //System.out.println(dir);
@@ -95,5 +96,8 @@ public class Rook extends Piece {
 
     public String getName(){
         return name;
+    }
+    public int getId(){
+        return id;
     }
 }
