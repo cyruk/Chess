@@ -78,7 +78,7 @@ public class Board  {
 
         for(int i = 0;i<9;i++){
             for(int j = 0;j<9;j++){
-                if(board[i][j].getClass().isInstance(new Empty())) {
+                if(board[i][j].getClass().isInstance(new Empty()) && i!=8) {
                     if(isHash(i,j))
                         board[i][j].setName("##");
                     else if(isHash(i,j)==false &&isNumOrLetter(board[i][j].getName())==false) {
@@ -87,7 +87,7 @@ public class Board  {
                     System.out.printf("%-3s", board[i][j].getName());
                 }
                 else if(i == 8){
-                    System.out.printf("%-3.9s",board[i][j].getName());
+                    System.out.print(" " +board[i][j].getName() + " ");
                 }
                 else
                     System.out.print(board[i][j].getName() + " ");
