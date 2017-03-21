@@ -12,22 +12,22 @@ public class Chess {
 
 		Board br = new Board();
 		Game game = new Game();
+		@SuppressWarnings("resource")
 		Scanner sc = new Scanner(System.in);
 		String input = "";
 		boolean draw = false;
 		boolean whiteTurn = true;
-		boolean moveValue;
 		br.toString();
 		String endGame = "";
+		String friendly = "";
 		while (true) {
 			if (whiteTurn == true) {
-				// System.out.print("White's move: ");
-				System.out.printf("White's move:");
-			} else {
-				// System.out.print("Blacks's move: ");
-				System.out.printf("Black's move:");
+				System.out.printf("White's move: ");
+			} 
+			else {
+				System.out.printf("Black's move: ");
 			}
-		input = sc.nextLine();
+			input = sc.nextLine();
 			if (input.toLowerCase().equals("resign")) {
 				endGame = "Resign";
 				break;
@@ -38,22 +38,30 @@ public class Chess {
 				}
 				whiteTurn = changeTurn(whiteTurn);
 			} 
+			else if (input.length() > 5|| (input.length()<5&& !input.toLowerCase().equals("draw"))) 
+			{
+				System.out.println("Invalid move try again");
+				continue;
+			}
 			else if(input.equals("draw")&& draw ==true){
 				endGame = "Draw";
 				break;
 			}
+			else if (input.charAt(2) != ' '){
+				System.out.println("Invalid move try again");
+				continue;
+			}
 			else {
-				if(game.friendlyCheck(br, input, whiteTurn).equals("invalid")){
-					System.out.println("Invalid move try again");
-					continue;
-				}
-				else if(game.friendlyCheck(br, input, whiteTurn).equals("inFriendlyCheck")){
-					System.out.println("Invalid move try again");
+				if(friendly.equals("invalid")||friendly.equals("inFriendlyCheck")){
+					System.out.println("Illegal move, try again");
 					continue;
 				}
 				else {
-						moveValue = game.move(br, input, whiteTurn);
-						if(game.checkMate(br, input, whiteTurn)==true){
+						if(game.move(br, input, whiteTurn)!=true){
+							System.out.println("Illegal move, try again");
+							continue;
+						}
+						else if(game.checkMate(br, input, whiteTurn)==true){
 							endGame = "CheckMate";
 							break;
 						}
