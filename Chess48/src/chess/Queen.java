@@ -8,9 +8,7 @@ import java.io.IOException;
 public class Queen extends Piece {
 
     public String color;
-    public boolean ePos;
     public String name;
-    public  boolean moved;
     public int id;
     public Rook rook = new Rook();
     public Bishop bishop = new Bishop();
@@ -18,8 +16,6 @@ public class Queen extends Piece {
     public Queen(String color, String name, int id){
         this.color = color;
         this.name = name;
-        ePos = false;
-        moved = false;
         this.id = id;
     }
     public Queen(){}

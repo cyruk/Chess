@@ -7,16 +7,12 @@ import java.io.IOException;
  */
 public class Knight extends Piece {
     public String color;
-    public boolean ePos;
     public String name;
-    public  boolean moved;
     public int id;
 
     public Knight(String color, String name,int id){
         this.color = color;
         this.name = name;
-        ePos = false;
-        moved = false;
         this.id = id;
     }
     public Knight(){}

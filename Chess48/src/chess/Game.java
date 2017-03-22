@@ -1,4 +1,3 @@
-
 package chess;
 
 import java.io.IOException;
@@ -104,16 +103,11 @@ public class Game {
     public boolean checkMate(Board br, String cdt, boolean turn) throws IOException{
     	//base position of king is in line of sight for more than one enemy and king cant move out of check
     	Board copy = copyBoard(br);
-    	//int cord[] = new int[4];
     	int kRow,kCol;
     	King kObject = new King();
-    	//cord = convert(cdt);
-    	//row2 = cord[2];
-    	//col2 = cord[3];
-    	String testCdt = "";
-    	//String color = copy.board[row2][col2].getColor();
+    	@SuppressWarnings("unused")
+		String testCdt= "";
     	String[] validCoordinates = new String[8];
-    	//boolean result;
     	String kCoordinate = "";
     	int checkCounter = 0;
     	int kMoveCounter=0;
@@ -139,7 +133,7 @@ public class Game {
         			continue;
         		}
         		//if a piece has the king in its line of sight
-        		else if(pieceEnemyCheck(copy,testCdt,true,i)==true){
+        		else if(pieceEnemyCheck(copy,true,i)==true){
         			//save that piece's info
         			pieceKInCheck[0] = convertBack(copy.White[i]);
         			killerIndex = i;
@@ -161,7 +155,7 @@ public class Game {
         		if( convertBack(copy.Black[i]).isEmpty()){
         			continue;
         		}
-        		else if(pieceEnemyCheck(copy,testCdt,false,i)==true){
+        		else if(pieceEnemyCheck(copy,false,i)==true){
         			pieceKInCheck[0] = convertBack(copy.Black[i]);
         			killerIndex = i;
         			checkCounter++;
@@ -298,15 +292,9 @@ public class Game {
     	return false;
     }
     
-    public boolean pieceEnemyCheck(Board br, String cdt, boolean whiteTurn, int i) throws IOException{
+    public boolean pieceEnemyCheck(Board br, boolean whiteTurn, int i) throws IOException{
     	Board copy = copyBoard(br);
-    	//int cord[] = new int[4];
-    	//int row2,col2;
-    	//cord = convert(cdt);
-    	//row2 = cord[2];
-    	//col2 = cord[3];
     	String testCdt = "";
-    	
     	
         if(whiteTurn==true){
        		testCdt = convertBack(copy.White[i]) + " " +convertBack(copy.Black[15]);
@@ -623,13 +611,7 @@ public class Game {
 
     public String friendlyCheck(Board br, String cdt, boolean whiteTurn) throws IOException {
     	Board copy = copyBoard(br);
-    	//int cord[] = new int[4];
-    	//int row1,col1;
-    	//cord = convert(cdt);
-    	//row1 = cord[0];
-    	//col1 = cord[1];
     	String testCdt = "";
-    	//String color = copy.board[row1][col1].getColor();
     	boolean result;
     	result = move(copy, cdt, whiteTurn);
         if (result == false){
@@ -662,17 +644,9 @@ public class Game {
     	return "notInFriendlyCheck";
     }
     
-    public String enemyCheck(Board br, String cdt, boolean whiteTurn) throws IOException {
+    public String enemyCheck(Board br, boolean whiteTurn) throws IOException {
     	Board copy = copyBoard(br);
-    	//int cord[] = new int[4];
-    	//int row2,col2;
-    	//cord = convert(cdt);
-    	//row2 = cord[2];
-    	//col2 = cord[3];
     	String testCdt = "";
-    	//String color = copy.board[row2][col2].getColor();
-    	//boolean result;
-    	
         if(whiteTurn==true){
         	for(int i = 0;i <copy.White.length;i++){
         		testCdt = convertBack(copy.White[i]) + " " +convertBack(copy.Black[15]);

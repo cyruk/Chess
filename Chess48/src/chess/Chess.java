@@ -9,7 +9,6 @@ import java.util.Scanner;
 public class Chess {
 
 	public static void main(String[] args) throws IOException, NullPointerException {
-
 		Board br = new Board();
 		Game game = new Game();
 		@SuppressWarnings("resource")
@@ -19,7 +18,6 @@ public class Chess {
 		boolean whiteTurn = true;
 		br.toString();
 		String endGame = "";
-		String friendly = "";
 		while (true) {
 			if (whiteTurn == true) {
 				System.out.printf("White's move: ");
@@ -43,7 +41,7 @@ public class Chess {
 				System.out.println("Invalid move try again");
 				continue;
 			}
-			else if(input.equals("draw")&& draw ==true){
+			else if(input.toLowerCase().equals("draw")&& draw ==true){
 				endGame = "Draw";
 				break;
 			}
@@ -52,30 +50,27 @@ public class Chess {
 				continue;
 			}
 			else {
-				if(friendly.equals("invalid")||friendly.equals("inFriendlyCheck")){
+				
+				if(game.move(br, input, whiteTurn)!=true){
 					System.out.println("Illegal move, try again");
 					continue;
 				}
-				else {
-						if(game.move(br, input, whiteTurn)!=true){
-							System.out.println("Illegal move, try again");
-							continue;
-						}
-						else if(game.checkMate(br, input, whiteTurn)==true){
-							endGame = "CheckMate";
-							break;
-						}
-						else if(game.enemyCheck(br, input, whiteTurn).equals("enemyCheck")){
-							System.out.println("Check");
-						}
-						resetEpos(br,whiteTurn);
-					}
-					whiteTurn = changeTurn(whiteTurn);
-					System.out.println();
-					br.toString();
+				else if(game.checkMate(br, input, whiteTurn)==true){
+					endGame = "CheckMate";
+					break;
 				}
+				else if(game.enemyCheck(br, whiteTurn).equals("enemyCheck")){
+					System.out.println("Check");
+				}
+				resetEpos(br,whiteTurn);
 			}
+			whiteTurn = changeTurn(whiteTurn);
+			System.out.println();
+			br.toString();
+		}
+	
 			if(endGame.equals("CheckMate")){
+				System.out.println();
 				br.toString();
 				System.out.println("CheckMate! " + turnColor(whiteTurn) + " Wins!");
 			}
@@ -85,9 +80,7 @@ public class Chess {
 			else if(endGame.equals("Resign")){
 				System.out.println("Game Ended---> " + turnColor(whiteTurn) + " resigned!");
 			}
-		}
-	
-
+	}
 
 	public static boolean changeTurn(boolean whiteTurn) {
 		if (whiteTurn == true) {

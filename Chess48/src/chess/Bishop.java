@@ -1,4 +1,5 @@
 package chess;
+
 import java.io.IOException;
 
 /**
@@ -7,16 +8,12 @@ import java.io.IOException;
 public class Bishop extends Piece {
 
     public String color;
-    public boolean ePos;
     public String name;
-    public  boolean moved;
     public int id;
 
     public Bishop(String color, String name, int id){
         this.color = color;
         this.name = name;
-        ePos = false;
-        moved = false;
         this.id = id;
 
     }
