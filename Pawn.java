@@ -72,6 +72,9 @@ public class Pawn extends Piece {
                     else if(row1==6 && row1-row2==2 && !br.board[row2+1][col2].getClass().isInstance(new Empty())){
                         return "No";
                     }
+                    else if(row2 ==4 && row1 ==2){
+                    	return "setEpos";
+                    }
                     return "FreeMove";
                 }
                 else if(row1 ==3&& br.board[row2+1][col2].ePos==true){
@@ -127,6 +130,9 @@ public class Pawn extends Piece {
                     }
                     else if(row1 ==1 && row2-row1 ==2&& !br.board[row2-1][col2].getClass().isInstance(new Empty())){
                         return "No";
+                    }
+                    else if(row2 ==3 && row1 ==1){
+                    	return "setEpos";
                     }
                     return "FreeMove";
                 }
