@@ -8,7 +8,6 @@ import java.io.IOException;
  */
 public class Rook extends Piece {
     public String color;
-    public boolean ePos;
     public String name;
     public  boolean moved;
     public int id;
@@ -16,7 +15,6 @@ public class Rook extends Piece {
     public Rook(String color, String name, int id){
         this.color = color;
         this.name = name;
-        ePos = false;
         moved = false;
         this.id = id;
     }
@@ -30,7 +28,6 @@ public class Rook extends Piece {
 
             return "No";
         }
-        //System.out.println(dir);
         else if(dir.equals("nor")){
             for(i = row1-1;i>row2;i--){
                 if(!(br.board[i][col2].getClass().isInstance(new Empty()))){
