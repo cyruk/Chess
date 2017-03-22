@@ -7,7 +7,6 @@ import java.io.IOException;
  */
 public class King extends Piece {
     public String color;
-    public boolean ePos;
     public String name;
     public boolean moved;
     public int id;
@@ -15,7 +14,6 @@ public class King extends Piece {
     public King(String color, String name, int id) {
         this.color = color;
         this.name = name;
-        ePos = false;
         moved = false;
         this.id = id;
     }
@@ -63,6 +61,7 @@ public class King extends Piece {
         //king is moving to the right
         else if(col2-col1 ==2){
             //king has already moved
+        	//System.out.println(br.board[row1][col1].moved);
             if(br.board[row1][col1].moved==true){
                 return "No";
             }
