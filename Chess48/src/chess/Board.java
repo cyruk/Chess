@@ -1,12 +1,20 @@
 package chess;
 
 /**
- * Created by Shah on 3/9/2017.
+ * The Board class creates 2d array of type piece which includes all of the game pieces 
+ * @author Shah Rahim, John Chen
+ * @board this is the 2d array of type piece which will hold all of the pieces within during play
+ * @Black this is the string array that will hold all of black pieces coordinates
+ * @White this is the string array that will hold all of white pieces coordinates
  */
 public class Board  {
     Piece[][] board = new Piece[9][9];
     String [] Black = new String[16];
     String [] White = new String[16];
+    
+    /**
+     * This is the board construcctor which essentially creates a fresh board for play
+     */
     public Board(){
         String[] numbers = {"1","2","3","4","5","6","7","8"};
         String[] letters = {"a","b","c","d","e","f","g","h"};
@@ -27,7 +35,7 @@ public class Board  {
         board[7][5] = new Bishop("White","wB",13);
         White[13] = String.valueOf(7) + String.valueOf(5);
         board[7][3] = new Queen("White","wQ",14);
-        White[14] = String.valueOf(7) + String.valueOf(6);
+        White[14] = String.valueOf(7) + String.valueOf(3);
         board[7][4] = new King("White","wK", 15);
         White[15] = String.valueOf(7) + String.valueOf(4);
 
@@ -73,7 +81,10 @@ public class Board  {
             x++;
         }
     }
-
+    
+    /**
+     * The to String method prints out the board during play
+     */
     public String toString(){
 
         for(int i = 0;i<9;i++){
@@ -96,7 +107,13 @@ public class Board  {
         }
         return "";
     }
-
+    
+    /**
+     * This method checks mathematically is a coordinate on the board should have a hash or not
+     * @param row is the row on the board 
+     * @param col is the column on the board
+     * @return returns true if the coordinate is a hash or false if its not
+     */
     public boolean isHash(int row, int col){
         if (row == 8 || col == 8){
             return false;
@@ -113,6 +130,12 @@ public class Board  {
         }
         return false;
     }
+    
+    /**
+     * Checks if a string is a number or letter
+     * @param str the string which is examined
+     * @return true if the str is a letter or number otherwise false
+     */
     public boolean isNumOrLetter(String str){
         if(str.isEmpty()){
             return false;
