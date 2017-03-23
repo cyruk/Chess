@@ -1,15 +1,30 @@
+
 package chess;
 
 import java.io.IOException;
 
 /**
- * Created by Shah on 3/8/2017.
+ * The Game class handles all games of chess
+ * @author Shah Rahim, John Chen
+ *
  */
 public class Game {
-
+	
+	/**
+	 * No arg constructor
+	 */
     public Game() {
     }
-
+    
+    /**
+     * This class checks if certaain pieces move is valid and then performs the move
+     * @param br is the board object to be examined
+     * @param cr is the coordinate the user inputs
+     * @param whiteTurn is true if its whites turn, false otherwise
+     * @return returns true if the move is successful, false otherwise
+     * @throws IOException
+     * @throws NullPointerException
+     */
     public boolean move(Board br, String cr, boolean whiteTurn) throws IOException, NullPointerException {
         int[] cor;
         int row1, col1, row2, col2;
@@ -100,7 +115,15 @@ public class Game {
         }
         return true;
     }
-    public boolean checkMate(Board br, String cdt, boolean turn) throws IOException{
+    
+    /**
+     * This method checks if the king is in checkmate
+     * @param br the board to be examined
+     * @param turn which piece just went
+     * @return returns true if the enemy king is in checkmate, false otherwise
+     * @throws IOException
+     */
+    public boolean checkMate(Board br, boolean turn) throws IOException{
     	//base position of king is in line of sight for more than one enemy and king cant move out of check
     	Board copy = copyBoard(br);
     	int kRow,kCol;
@@ -292,6 +315,14 @@ public class Game {
     	return false;
     }
     
+    /**
+     * This method checks if a certain piece has the enemy king in check
+     * @param br the board to be examined
+     * @param whiteTurn which colors turn is it
+     * @param i the index of a piece within the array of coordinates
+     * @return returns true if a piece has the enemy king in check, false otherwise
+     * @throws IOException
+     */
     public boolean pieceEnemyCheck(Board br, boolean whiteTurn, int i) throws IOException{
     	Board copy = copyBoard(br);
     	String testCdt = "";
@@ -319,6 +350,15 @@ public class Game {
     	return false;
     	
     }
+    /**
+     * This method checks if a kings frieldy pieces can block off their king from being in check
+     * @param br the board to be examined
+     * @param cdt the coordinate of the piece that has king in check and the king thats in check respectivley
+     * @param killerIndex the pieces index in the array of coordinates that has king in check
+     * @param kColor the color of the king thats attempting to avoid check
+     * @return returns true if a kings friendly piece can block the enemy piece, false otherwise
+     * @throws IOException
+     */
     public boolean blockLineOfSight(Board br, String cdt, int killerIndex,String kColor) throws IOException{
     	Board copy = copyBoard(br);
     	int[] cor = convert(cdt);
@@ -608,7 +648,15 @@ public class Game {
 		}
     	return false;
     }
-
+    
+    /**
+     * This method checks if a piece after moving is putting friendly king in check
+     * @param br the board to be examined
+     * @param cdt the coordinates of the move
+     * @param whiteTurn indicates whos turn it is
+     * @return returns a string indicating whether a pieces move is invalid, puts friendly king in check or not
+     * @throws IOException
+     */
     public String friendlyCheck(Board br, String cdt, boolean whiteTurn) throws IOException {
     	Board copy = copyBoard(br);
     	String testCdt = "";
@@ -644,6 +692,13 @@ public class Game {
     	return "notInFriendlyCheck";
     }
     
+    /**
+     * This method checks all pieces if they have enemy king in check
+     * @param br the board to be examined
+     * @param whiteTurn indicates whos turn it is
+     * @return returns a string indicating is an enemy king is in check or not
+     * @throws IOException
+     */
     public String enemyCheck(Board br, boolean whiteTurn) throws IOException {
     	Board copy = copyBoard(br);
     	String testCdt = "";
@@ -671,7 +726,16 @@ public class Game {
         }
     	return "enemyNotInCheck";
     }
-
+    
+    /**
+     * This method changes the coordinates in the array of strings to match the location of a piece
+     * @param br the board to be examined
+     * @param color the color of the piece
+     * @param id the id number of the piece(index) in the array of strings
+     * @param row2 the desired row to which the piece moves
+     * @param col2 the desired column to which the piece moves
+     * @return returns a board board object with the coordinates changed
+     */
     public Board changePosition(Board br, String color, int id, int row2, int col2) {
         if (color.equals("White")) {
             if (row2 == -1 || col2 == -1) {
@@ -691,7 +755,18 @@ public class Game {
         }
         return br;
     }
-
+    
+    /**
+     * If a isValid method indicates a freemove, this methos performs that move
+     * @param br the board to be examined
+     * @param row1 the starting row
+     * @param col1 the starting column
+     * @param row2 the ending row
+     * @param col2 the ending column
+     * @param temp the tempoary piece which will be used for swapping
+     * @param color the color pf the piece 
+     * @return returns a board object after performing a valid move to a free spot on the board
+     */
     public Board freeMove(Board br, int row1, int col1, int row2, int col2, Piece[] temp, String color){
         int id = br.board[row1][col1].getId();
         temp[0] = br.board[row2][col2];
@@ -700,7 +775,19 @@ public class Game {
         br = changePosition(br, color, id, row2, col2);
         return br;
     }
-
+    
+    /**
+     * This method is for promoting a pawns piece when applicable
+     * @param br the board to be examined
+     * @param row1 the starting row
+     * @param col1 the starting column
+     * @param row2 the row where the pawn is going for promotion
+     * @param col2 the column the column is going for promotion
+     * @param moveDetails the details of what type of promotion
+     * @param color the color of the pawn
+     * @param userInput the users input during promotion
+     * @return returns board object after promoting a pawn
+     */
     public Board promotion(Board br, int row1, int col1, int row2, int col2, String moveDetails, String color, String userInput){
         int pawnID = br.board[row1][col1].getId();
         char colorPiece = color.toLowerCase().charAt(0);
@@ -770,7 +857,18 @@ public class Game {
         }
         return br;
     }
-
+    
+    /**
+     * This method performs a capturing of an enemy piece when it is applicable
+     * @param br the board to be examined
+     * @param row1 the starting row
+     * @param col1 the starting column
+     * @param row2 the row at which the enemy piece is to be captured
+     * @param col2 the column at which the enemy piece is to be captured
+     * @param temp the temp piece used for swapping object on the board
+     * @param colorKiller the color of the piece that is performing the capture
+     * @return returns a board object after performing the capturing of the enemy piecde
+     */
     public Board Kill(Board br, int row1, int col1, int row2, int col2, Piece[] temp, String colorKiller){
         int IDKiller = br.board[row1][col1].getId();
         int IDKilled = br.board[row2][col2].getId();
@@ -781,6 +879,18 @@ public class Game {
         br = changePosition(br, colorKilled, IDKilled, -1, -1);
         return br;
     }
+    
+    /**
+     * This method performs the Empassant move when applicable
+     * @param br the board to be examined
+     * @param row1 the starting row
+     * @param col1 the starting column
+     * @param row2 the ending row
+     * @param col2 the ending column
+     * @param killerColor the color of the pawn that is performing empassant
+     * @param tmp the tmp piece used for swapping pieces
+     * @return returns a board object after permforming the empassant
+     */
     public Board Epos(Board br, int row1,int col1,int row2,int col2,String killerColor,Piece[] tmp){
         int IDKiller = br.board[row1][col1].getId();
         int IDKilled;
@@ -807,7 +917,19 @@ public class Game {
         }
         return br;
     }
-
+    
+    /**
+     * This method performs castling when applicable
+     * @param br the board object to be examined
+     * @param row1 the starting row of the king
+     * @param col1 the starting column of the king
+     * @param row2 the ending row of the king
+     * @param col2 the ending column of the king
+     * @param moveDetails the details of what type of castling is taking place
+     * @param kingColor the color of the king performing castling
+     * @param tmp the tmp piece variable used for swapping
+     * @return returns a new board object after perfoming castling
+     */
     public Board castling(Board br, int row1,int col1,int row2, int col2, String moveDetails, String kingColor, Piece[] tmp){
         int kingID = br.board[row1][col1].getId();
         int rookID;
@@ -839,6 +961,11 @@ public class Game {
         return br;
     }
     
+    /**
+     * This method converts a string of numbers to chess coordinates
+     * @param cdt the string of number coordinates
+     * @return this method returns a string containging the chess coordinate
+     */
     public String convertBack(String cdt){
     	if(cdt.equals("")){
     		return "";
@@ -853,6 +980,11 @@ public class Game {
 		return finCdt;
     }
     
+    /**
+     * This method copies a given board object into a new copied version of a board
+     * @param br the board object to be copied
+     * @return returns a new copied version of the board provided
+     */
     public Board copyBoard(Board br){
     	Board copy = new Board();
     	int i,j;
@@ -868,7 +1000,12 @@ public class Game {
     	}
     	return copy;
     }
-
+    
+    /**
+     * This method converts chess coordinates into int rows and columns
+     * @param cdt the chess string coordinate provided by the player
+     * @return returns an array of ints containg rows and columns of the pieces location, and destination
+     */
     public int[] convert(String cdt) {
         int[] cor = new int[4];
         int[] rows = { 7, 6, 5, 4, 3, 2, 1, 0 };
@@ -931,7 +1068,17 @@ public class Game {
         }
         return cor;
     }
-
+    
+    /**
+     * This method is used for swapping pieces for testing
+     * @param br the board to be examined
+     * @param row1 the starting row
+     * @param col1 the starting column
+     * @param row2 the ending row
+     * @param col2 the ending column
+     * @return returns a board object with the swapped pieces
+     * @throws IOException
+     */
     public Board swap(Board br, int row1, int col1, int row2, int col2) throws IOException {
         Piece[] tmp = new Piece[1];
         tmp[0] = br.board[row2][col2];
