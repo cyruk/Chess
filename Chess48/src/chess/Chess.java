@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
- * Created by Shah on 3/9/2017.
+ * The Chess class is the main class where chess games are created and played
+ * @author Shah Rahim, John Chen
+ *
  */
 public class Chess {
-
+	
 	public static void main(String[] args) throws IOException, NullPointerException {
 		Board br = new Board();
 		Game game = new Game();
@@ -55,7 +57,7 @@ public class Chess {
 					System.out.println("Illegal move, try again");
 					continue;
 				}
-				else if(game.checkMate(br, input, whiteTurn)==true){
+				else if(game.checkMate(br, whiteTurn)==true){
 					endGame = "CheckMate";
 					break;
 				}
@@ -81,19 +83,36 @@ public class Chess {
 				System.out.println("Game Ended---> " + turnColor(whiteTurn) + " resigned!");
 			}
 	}
-
+	
+	/**
+	 * This method changes the colors turn when invoked
+	 * @param whiteTurn the current turn
+	 * @return returns a boolean-- the opposite colors turn
+	 */
 	public static boolean changeTurn(boolean whiteTurn) {
 		if (whiteTurn == true) {
 			return false;
 		}
 		return true;
 	}
+	
+	/**
+	 * This method takes the boolean turn value and convertis it into a string color
+	 * @param whiteTurn the boolean which indicates whos turn it is
+	 * @return returns a string of the color
+	 */
 	public static String turnColor(boolean whiteTurn){
 		if (whiteTurn == true) {
 			return "White";
 		}
 		return "Black";
 	}
+	
+	/**
+	 * This method resets empassant for paws when a piece has moved
+	 * @param br the boaard to be examined
+	 * @param whiteTurn indicating which color piece has moved
+	 */
 	public static void resetEpos(Board br, boolean whiteTurn){
 		if (whiteTurn == true){
 			for (int i = 0; i < 8; i++) {
