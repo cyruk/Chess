@@ -1,24 +1,46 @@
 package chess;
+
 import java.io.IOException;
 
 /**
- * Created by Shah on 3/8/2017.
+ * The King class is inheriting piece and added to the polymorphic 2d array of type Piece
+ * @author Shah Rahim, John Chen
+ *
  */
 public class King extends Piece {
     public String color;
     public String name;
     public boolean moved;
     public int id;
-
+    
+    /**
+     * This is the kings constructor
+	 * @color this is the color field used to distinguish black and white pieces
+	 * @name this is used to distinguash different pieces when displaying them on the board
+	 * @moved this is used to signal if a certain piece has moved or not
+	 * @id this field is used for identifying the index of a given piece in the boards coordinate arrays
+	 */
     public King(String color, String name, int id) {
         this.color = color;
         this.name = name;
         moved = false;
         this.id = id;
     }
-
+    /**
+     * No arg constructor
+     */
     public King(){}
-
+    
+    /**
+     * This method is used to check if a move is valid for the king
+     * @param row1 this is the starting row of a piece
+     * @param col1 this is the starting column of a piece
+     * @param row2 this is the desired row a piece wants to move
+     * @param col2 this is the desired column a piece wants to move
+     * @param br this is the board being passed in for checking
+     * @return returns a string based on the pieces possible moves: FreeMove, Kill or their special respective move or no for invalid
+     * @throws IOException
+     */
     public String isValid(int row1, int col1, int row2, int col2, Board br) throws IOException {
         String cl = br.board[row1][col1].getColor();
         //moving more than one spot down or up
@@ -90,7 +112,13 @@ public class King extends Piece {
         //Enemy piece for killing
         return "Kill";
     }
-
+    
+    /**
+     * This method is used to calculate all legal moves a king can make
+     * @param kRow the row at which the king is located
+     * @param kCol the column at which the king is located
+     * @return returns an array of strings containing all legal moves of a king
+     */
     public String[] possibleMoves(int kRow, int kCol){
     	int[] row = new int[8];
     	int[] col = new int[8];
@@ -122,10 +150,25 @@ public class King extends Piece {
         }
         return validCoordinates;
     }
+    
+    /**
+     * This method is used to get the color of a piece
+     * @return returns a string for the color of a certain piece
+     */
+    public String getColor(){
+        return color;
+    }
+    /**
+     * Used to get the name of the piece
+     * @return returns a string for the name of the given piece
+     */
     public String getName(){
         return name;
     }
-    public String getColor(){return color;}
+    /**
+     * This is used to get the id number of the rook piece
+     * @return an int for the rook id
+     */
     public int getId(){
         return id;
     }
