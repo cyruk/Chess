@@ -3,25 +3,46 @@ package chess;
 import java.io.IOException;
 
 /**
- * Created by Shah on 3/1/2017.
+ * The pawn class is inheriting piece and added to the polymorphic 2d array of type Piece
+ * @author Shah Rahim, John Chen
+ *
  */
 public class Pawn extends Piece {
     public String color;
     public boolean ePos;
     public String name;
     public int id;
-
+    
+    /**
+     * 
+     * @param color
+     * @param name
+     * @param id
+     */
     public Pawn(String color, String name, int id){
         this.color = color;
         this.name = name;
         ePos = false;
         this.id = id;
     }
+    
+    /**
+     * The no arg constructor for pawn
+     */
     public Pawn(){
 
     }
 
-    //checks if player move for pawn is valid, if not then returns false, otherwise returns true
+    /**
+     * 
+     * @param row1 this is the starting row of a piece
+     * @param col1 this is the starting column of a piece
+     * @param row2 this is the desired row a piece wants to move
+     * @param col2 this is the desired column a piece wants to move
+     * @param br this is the board being passed in for checking
+     * @return returns a string based on the pieces possible moves: FreeMove, Kill or their special respective move or no for invalid
+     * @throws IOException
+     */
     public String isValid(int row1, int col1, int row2, int col2, Board br)throws IOException{
         if(br.board[row1][col1].getColor().equals("White")){
             //going backwards?
@@ -144,14 +165,24 @@ public class Pawn extends Piece {
         }
         return "FreeMove";
     }
-
+    /**
+     * This method is used to get the color of a piece
+     * @return returns a string for the color of a certain piece
+     */
     public String getColor(){
         return color;
     }
-
+    /**
+     * Used to get the name of the piece
+     * @return returns a string for the name of the given piece
+     */
     public String getName(){
         return name;
     }
+    /**
+     * This is used to get the id number of the pawn piece
+     * @return an int for the pawns id
+     */
     public int getId(){
         return id;
     }
